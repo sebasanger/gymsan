@@ -32,8 +32,13 @@ public class Membresia {
 
     private Double precio;
 
+    private Boolean activa;
+
     @Column(length = 255)
     private String descripcion;
+
+    @Column(name = "cantidad_clases")
+    private String cantidadClases;
 
     @ManyToMany
     @JoinTable(

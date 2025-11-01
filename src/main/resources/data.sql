@@ -108,3 +108,26 @@ insert into fotos_ejercicio (fotos_id, ejercicios_id) values (1, 1);
 -- FOTOS VIDEOS --
 insert into videos_ejercicio (videos_id, ejercicios_id) values (1, 1);
 -- FOTOS VIDEOS --
+
+-- MEMBRESIAS --
+insert into membresias (id, nombre, precio, descripcion, cantidad_clases, activa) values 
+(1, "Membresia estandar", 50000, "Membresia basica", 0, true),
+(2, "Membresia gold", 55000, "Membresia con adicional a 5 clases a inscribirse", 5, true);
+-- MEMBRESIAS --
+
+-- MEMBRESIAS USUARIOS --
+insert into membresias_usuarios (id, membresias_id, usuarios_id, fecha_inscripcion, fecha_vencimiento, activa) values 
+(1, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, false),
+(2, 2, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
+-- MEMBRESIAS USUARIOS --
+
+-- PAGOS --
+insert into pagos (id, fecha, monto, transaction, aceptada, descripcion) values 
+(1, CURRENT_TIMESTAMP, 50000, "kjkszpj", true, "pago de la mensualidad"),
+(2, CURRENT_TIMESTAMP, 55000, "kjkszpj", true, "pago de la mensualidad e inscripcion");
+-- PAGOS --
+
+-- PAGOS MEMBRESIAS --
+insert into pagos_membresias (membresias_usuarios_id, pagos_id) values (1, 1);
+insert into pagos_membresias (membresias_usuarios_id, pagos_id) values (2, 2);
+-- PAGOS MEMBRESIAS --
