@@ -79,6 +79,14 @@ public class Usuario implements UserDetails {
     @JsonManagedReference
     private Set<Rol> roles;
 
+    @ManyToMany
+    @JoinTable(
+            name = "membresias_usuarios",
+            joinColumns = @JoinColumn(name = "usuarios_id"),
+            inverseJoinColumns = @JoinColumn(name = "membresias_id")
+    )
+    private Set<Membresia> membresias;
+
     @CreatedDate
     private LocalDateTime createdAt;
 
