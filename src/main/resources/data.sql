@@ -90,3 +90,21 @@ insert into ejercicios_alternativos
 (ejercicio_entrenamiento_id, alternativo_id) 
 values (1, 7);
 -- EJERCICIOS ALTERNATIVOS --
+
+
+
+-- FOTOS --
+insert into fotos (id, foto) values (1, "urlParaFoto");
+-- FOTOS --
+
+-- VIDEOS --
+insert into videos (id, video) values (1, "urlParaVideo");
+-- VIDEOS --
+
+-- FOTOS EJERCICIOS --
+insert into fotos_ejercicio (fotos_id, ejercicios_id) values (1, 1);
+-- FOTOS EJERCICIOS --
+
+-- FOTOS VIDEOS --
+insert into videos_ejercicio (videos_id, ejercicios_id) values (1, 1);
+-- FOTOS VIDEOS --
