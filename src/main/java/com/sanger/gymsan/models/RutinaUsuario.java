@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RutinasUsuarios {
+public class RutinaUsuario {
 
     @EmbeddedId
     private RutinasUsuariosKey id;

@@ -15,7 +15,7 @@ import lombok.AllArgsConstructor;
 @Service
 @AllArgsConstructor
 @Transactional
-public class RolService {
+public class RolService extends BaseService<Rol, Long, RolRepository> {
 
     private final RolRepository rolRepository;
 

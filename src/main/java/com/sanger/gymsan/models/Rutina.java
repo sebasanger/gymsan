@@ -46,7 +46,7 @@ public class Rutina {
     private Boolean activa;
 
     @OneToMany(mappedBy = "rutina")
-    private Set<RutinasUsuarios> rutinasUsuarios;
+    private Set<RutinaUsuario> rutinasUsuarios;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
