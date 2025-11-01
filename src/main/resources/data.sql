@@ -131,3 +131,13 @@ insert into pagos (id, fecha, monto, transaction, aceptada, descripcion) values
 insert into pagos_membresias (membresias_usuarios_id, pagos_id) values (1, 1);
 insert into pagos_membresias (membresias_usuarios_id, pagos_id) values (2, 2);
 -- PAGOS MEMBRESIAS --
+
+
+-- POGRESOS RUTINAS --
+insert into progresos_rutinas (id, usuarios_id, rutinas_id, entrenamientos_id, check_in, check_out) values (1, 1, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+-- POGRESOS RUTINAS --
+
+
+-- POGRESOS EJERCICIOS --
+insert into progresos_ejercicios (id, progresos_rutinas_id, ejercicios_id, peso, series, repeticiones) values (1, 1, 1, 130, 8, 9);
+-- POGRESOS EJERCICIOS --

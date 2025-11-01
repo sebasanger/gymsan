@@ -2,6 +2,7 @@ package com.sanger.gymsan.models;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
@@ -44,8 +45,14 @@ public class Ejercicio {
     @JoinColumn(name = "categorias_id")
     private Categoria categoria;
 
-    @OneToMany(mappedBy = "ejercicio")
-    private Set<EjercicioEntrenamiento> ejerciciosEntrenamientos;
+    @ManyToMany
+    @JoinTable(
+            name = "ejercicios_entrenamientos",
+            joinColumns = @JoinColumn(name = "ejercicios_id"),
+            inverseJoinColumns = @JoinColumn(name = "entrenamientos_id")
+    )
+    @JsonBackReference
+    private Set<Entrenamiento> entrenamientos;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
