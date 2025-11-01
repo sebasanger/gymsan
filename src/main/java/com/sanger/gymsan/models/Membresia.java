@@ -2,6 +2,9 @@ package com.sanger.gymsan.models;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,7 +17,9 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "membresias")
@@ -46,6 +51,9 @@ public class Membresia {
             joinColumns = @JoinColumn(name = "membresias_id"),
             inverseJoinColumns = @JoinColumn(name = "usuarios_id")
     )
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JsonBackReference
     private Set<Usuario> usuarios;
 
 }

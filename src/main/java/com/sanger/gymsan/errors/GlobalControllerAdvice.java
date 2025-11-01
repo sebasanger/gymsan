@@ -1,5 +1,6 @@
 package com.sanger.gymsan.errors;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;

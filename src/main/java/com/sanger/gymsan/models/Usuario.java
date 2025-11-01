@@ -85,6 +85,9 @@ public class Usuario implements UserDetails {
             joinColumns = @JoinColumn(name = "usuarios_id"),
             inverseJoinColumns = @JoinColumn(name = "membresias_id")
     )
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JsonManagedReference
     private Set<Membresia> membresias;
 
     @CreatedDate
