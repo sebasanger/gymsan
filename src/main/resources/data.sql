@@ -57,7 +57,7 @@ insert into entrenamientos_rutina (rutinas_id, entrenamientos_id) values (1, 3);
 
 -- EJERCICIOS --
 insert into ejercicios (id, nombre, descripcion, categorias_id) values
-(1, 'Press banca plano', 'Ejercicio de pecho con barra en banco plano', 1),
+(1, 'Press banca plano con barra', 'Ejercicio de pecho con barra en banco plano', 1),
 (2, 'Press inclinado con mancuernas', 'Ejercicio de pecho superior en banco inclinado', 1),
 (3, 'Remo con barra', 'Ejercicio de espalda media con barra', 2),
 (4, 'Dominadas', 'Ejercicio de tracción corporal para espalda y bíceps', 2),
@@ -66,18 +66,27 @@ insert into ejercicios (id, nombre, descripcion, categorias_id) values
 (7, 'Curl de bíceps con barra', 'Ejercicio de brazos enfocado en bíceps', 4),
 (8, 'Extensiones de tríceps en polea', 'Ejercicio de brazos enfocado en tríceps', 4),
 (9, 'Peso muerto', 'Ejercicio compuesto para piernas y espalda baja', 2),
-(10, 'Abdominales crunch', 'Ejercicio de abdomen tradicional en el suelo', 5);
+(10, 'Abdominales crunch', 'Ejercicio de abdomen tradicional en el suelo', 5),
+(11, 'Press banca plano con mancueras', 'Ejercicio de pecho con barra en banco plano', 1);
 -- EJERCICIOS --
 
 -- EJERCICIOS ENTRENAMIENTOS --
 insert into ejercicios_entrenamientos 
-(ejercicios_id, entrenamientos_id, series, peso, repeticiones) 
+(id, ejercicios_id, entrenamientos_id, series, peso, repeticiones) 
 values 
-(1, 1, 4, 130, 10),
-(2, 1, 4, 100, 8),
-(3, 2, 4, 100, 10),
-(4, 2, 4, 100, 10),
-(5, 3, 3, 150, 10),
-(6, 3, 3, 400, 10);
+(1, 1, 1, 4, 130, 10),
+(2, 2, 1, 4, 100, 8),
+(3, 3, 2, 4, 100, 10),
+(4, 4, 2, 4, 100, 10),
+(5, 5, 3, 3, 150, 10),
+(6, 6, 3, 3, 400, 10),
+(7, 11, 1, 4, 50, 10);
 
 -- EJERCICIOS ENTRENAMIENTOS --
+
+
+-- EJERCICIOS ALTERNATIVOS --
+insert into ejercicios_alternativos 
+(ejercicio_entrenamiento_id, alternativo_id) 
+values (1, 7);
+-- EJERCICIOS ALTERNATIVOS --
