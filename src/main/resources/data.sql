@@ -41,9 +41,9 @@ insert into rutinas_usuarios (usuarios_id, rutinas_id, activa, fecha_inicio, fec
 -- RUTINAS USUARIOS --
 
 -- ENTRENAMIENTOS --
-insert into entrenamientos (id, nombre, descripcion, categorias_id) values (1,"Entrenamiento de pecho y biceps", "Entrenamiento de pecho y biceps", 1);
-insert into entrenamientos (id, nombre, descripcion, categorias_id) values (2,"Entrenamiento de espalda y triceps", "Entrenamiento de espalda y triceps", 2);
-insert into entrenamientos (id, nombre, descripcion, categorias_id) values (3,"Entrenamiento piernas pesado", "Entrenamiento piernas pesado", 3);
+insert into entrenamientos (id, nombre, descripcion, categorias_id, deleted) values (1,"Entrenamiento de pecho y biceps", "Entrenamiento de pecho y biceps", 1, false);
+insert into entrenamientos (id, nombre, descripcion, categorias_id, deleted) values (2,"Entrenamiento de espalda y triceps", "Entrenamiento de espalda y triceps", 2, false);
+insert into entrenamientos (id, nombre, descripcion, categorias_id, deleted) values (3,"Entrenamiento piernas pesado", "Entrenamiento piernas pesado", 3, false);
 
 -- ENTRENAMIENTOS --
 

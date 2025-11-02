@@ -2,6 +2,8 @@ package com.sanger.gymsan.models;
 
 import java.util.Set;
 
+import org.hibernate.annotations.SQLDelete;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -40,7 +42,7 @@ public class Entrenamiento {
     @Column(length = 255)
     private String descripcion;
 
-    private Boolean activa;
+    private Boolean deleted;
 
     @ManyToOne
     @JoinColumn(name = "categorias_id")

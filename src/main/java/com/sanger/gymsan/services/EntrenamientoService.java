@@ -51,7 +51,7 @@ public class EntrenamientoService extends BaseService<Entrenamiento, Long, Entre
         entrenamiento.setNombre(newEntity.getNombre());
         entrenamiento.setDescripcion(newEntity.getDescripcion());
         entrenamiento.setCategoria(categoria);
-        entrenamiento.setActiva(true);
+        entrenamiento.setDeleted(false);
 
         return this.repository.save(entrenamiento);
 

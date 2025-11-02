@@ -1,5 +1,6 @@
 package com.sanger.gymsan.services;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,7 +35,16 @@ public abstract class BaseService<T, ID, R extends JpaRepository<T, ID>> {
     }
 
     public void delete(T t) {
-        repository.delete(t);
+        try {
+            Field deletedField = t.getClass().getDeclaredField("deleted");
+            deletedField.setAccessible(true);
+            deletedField.set(t, true);
+            repository.save(t);
+        } catch (NoSuchFieldException e) {
+            repository.delete(t);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException("No se puede acceder al campo deleted", e);
+        }
     }
 
     public void deleteById(ID id) {
