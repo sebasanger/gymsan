@@ -26,12 +26,12 @@ public class EjercicioService extends BaseService<Ejercicio, Long, EjercicioRepo
     private final CategoriaRepository categoriaRepoCategoriaRepository;
 
     @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
     public Ejercicio save(CreateEjercicioDto newEntity, Usuario user) {
         Ejercicio ejercicio = new Ejercicio();
         Categoria categoria = this.categoriaRepoCategoriaRepository.findByCategoria(newEntity.getCategoria())
-                .orElseThrow(() -> new EntityNotFoundException("Product method not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Categoria no encontrada"));
 
         ejercicio.setNombre(newEntity.getNombre());
         ejercicio.setDescripcion(newEntity.getDescripcion());
@@ -44,7 +44,7 @@ public class EjercicioService extends BaseService<Ejercicio, Long, EjercicioRepo
 
     public Ejercicio update(UpdateEjercicioDto updateEntity, Usuario user) {
         Ejercicio ejercicio = this.repository.findById(updateEntity.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Product method not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Ejercicio no encontrado"));
 
         Optional.ofNullable(updateEntity.getCategoria())
                 .ifPresent(cat -> {
