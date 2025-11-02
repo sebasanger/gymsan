@@ -79,7 +79,7 @@ public class Usuario implements UserDetails {
     @JsonManagedReference
     private Set<Rol> roles;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "membresias_usuarios",
             joinColumns = @JoinColumn(name = "usuarios_id"),
@@ -89,6 +89,16 @@ public class Usuario implements UserDetails {
     @ToString.Exclude
     @JsonManagedReference
     private Set<Membresia> membresias;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "rutinas_usuarios",
+            joinColumns = @JoinColumn(name = "usuarios_id"),
+            inverseJoinColumns = @JoinColumn(name = "rutinas_id"))
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JsonManagedReference
+    private Set<Rutina> rutinas;
 
     @CreatedDate
     private LocalDateTime createdAt;

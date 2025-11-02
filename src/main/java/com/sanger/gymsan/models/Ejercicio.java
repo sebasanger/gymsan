@@ -15,7 +15,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,6 +35,7 @@ public class Ejercicio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String nombre;
 
     @Column(length = 255)
@@ -45,16 +45,18 @@ public class Ejercicio {
     @JoinColumn(name = "categorias_id")
     private Categoria categoria;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "ejercicios_entrenamientos",
             joinColumns = @JoinColumn(name = "ejercicios_id"),
             inverseJoinColumns = @JoinColumn(name = "entrenamientos_id")
     )
     @JsonBackReference
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Set<Entrenamiento> entrenamientos;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "fotos_ejercicio",
             joinColumns = @JoinColumn(name = "fotos_id"),
@@ -64,7 +66,7 @@ public class Ejercicio {
     @JsonManagedReference
     private Set<Foto> fotos;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "videos_ejercicio",
             joinColumns = @JoinColumn(name = "videos_id"),

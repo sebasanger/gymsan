@@ -4,6 +4,7 @@ import java.util.Set;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
@@ -16,7 +17,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -45,10 +45,17 @@ public class Rutina {
 
     private Boolean activa;
 
-    @OneToMany(mappedBy = "rutina")
-    private Set<RutinaUsuario> rutinasUsuarios;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "rutinas_usuarios",
+            joinColumns = @JoinColumn(name = "rutinas_id"),
+            inverseJoinColumns = @JoinColumn(name = "usuarios_id"))
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JsonBackReference
+    private Set<Usuario> usuarios;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "entrenamientos_rutina",
             joinColumns = @JoinColumn(name = "rutinas_id"),

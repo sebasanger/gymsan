@@ -19,7 +19,9 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "entrenamientos")
@@ -50,6 +52,8 @@ public class Entrenamiento {
             joinColumns = @JoinColumn(name = "entrenamientos_id"),
             inverseJoinColumns = @JoinColumn(name = "rutinas_id"))
     @JsonIgnore
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @JsonBackReference
     private Set<Rutina> rutinas;
 
@@ -60,6 +64,8 @@ public class Entrenamiento {
             inverseJoinColumns = @JoinColumn(name = "ejercicios_id")
     )
     @JsonManagedReference
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Set<Ejercicio> ejercicios;
 
 }
