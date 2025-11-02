@@ -4,11 +4,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sanger.gymsan.dto.ejercicio.CreateEjercicioDto;
+import com.sanger.gymsan.dto.ejercicio.UpdateEjercicioDto;
 import com.sanger.gymsan.models.Ejercicio;
 import com.sanger.gymsan.models.Usuario;
 import com.sanger.gymsan.services.EjercicioService;
@@ -27,6 +29,12 @@ public class EjercicioController extends BaseController<Ejercicio, Long, Ejercic
     public ResponseEntity<?> create(@Valid @RequestBody CreateEjercicioDto newEntity,
             @AuthenticationPrincipal Usuario user) {
         return ResponseEntity.status(HttpStatus.CREATED).body(ejercicioService.save(newEntity, user));
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<?> update(@Valid @RequestBody UpdateEjercicioDto newEntity,
+            @AuthenticationPrincipal Usuario user) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(ejercicioService.update(newEntity, user));
     }
 
 }
