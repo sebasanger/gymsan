@@ -4,11 +4,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sanger.gymsan.dto.rutina.CreateRutinaDto;
+import com.sanger.gymsan.dto.rutina.UpdateRutinaDto;
 import com.sanger.gymsan.models.Rutina;
 import com.sanger.gymsan.models.Usuario;
 import com.sanger.gymsan.services.RutinaService;
@@ -27,6 +29,12 @@ public class RutinaController extends BaseController<Rutina, Long, RutinaService
     public ResponseEntity<?> create(@Valid @RequestBody CreateRutinaDto newEntity,
             @AuthenticationPrincipal Usuario user) {
         return ResponseEntity.status(HttpStatus.CREATED).body(rutinaService.save(newEntity, user));
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<?> update(@Valid @RequestBody UpdateRutinaDto newEntity,
+            @AuthenticationPrincipal Usuario user) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(rutinaService.update(newEntity, user));
     }
 
 }

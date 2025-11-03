@@ -1,12 +1,17 @@
 package com.sanger.gymsan.services;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sanger.gymsan.dto.rutina.CreateRutinaDto;
+import com.sanger.gymsan.dto.rutina.UpdateRutinaDto;
+import com.sanger.gymsan.models.Categoria;
+import com.sanger.gymsan.models.Ejercicio;
 import com.sanger.gymsan.models.Entrenamiento;
 import com.sanger.gymsan.models.Rutina;
 import com.sanger.gymsan.models.Usuario;
@@ -23,6 +28,8 @@ public class RutinaService extends BaseService<Rutina, Long, RutinaRepository> {
     private final UsuarioService usuarioService;
 
     private final EntrenamientoService entrenamientoService;
+
+    private final ModelMapper modelMapper;
 
     public Rutina save(CreateRutinaDto newEntity, Usuario user) {
         Rutina rutina = new Rutina();
@@ -46,6 +53,16 @@ public class RutinaService extends BaseService<Rutina, Long, RutinaRepository> {
         rutina.setNombre(newEntity.getNombre());
         rutina.setDescripcion(newEntity.getDescripcion());
         rutina.setDeleted(false);
+
+        return this.repository.save(rutina);
+
+    }
+
+    public Rutina update(UpdateRutinaDto updateEntity, Usuario user) {
+        Rutina rutina = this.repository.findById(updateEntity.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Rutina no encontrado"));
+
+        modelMapper.map(updateEntity, rutina);
 
         return this.repository.save(rutina);
 
