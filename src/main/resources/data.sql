@@ -139,5 +139,16 @@ insert into progresos_rutinas (id, usuarios_id, rutinas_id, entrenamientos_id, c
 
 
 -- POGRESOS EJERCICIOS --
-insert into progresos_ejercicios (id, progresos_rutinas_id, ejercicios_id, peso, series, repeticiones) values (1, 1, 1, 130, 8, 9);
+insert into progresos_ejercicios (id, progresos_rutinas_id, ejercicios_id, cantidad_series) values (1, 1, 1, 4);
 -- POGRESOS EJERCICIOS --
+
+
+-- SERIES --
+insert into series (id, repeticiones, peso, realizada) values (1, 10, 140, true), (2, 9, 140, true), (3, 8, 140, true), (4, 10, 120, false);
+-- SERIES --
+
+
+-- SERIES PROGRESOS EJERCICIOS --
+insert into series_progresos_rutinas (series_id, progresos_ejercicios_id) values (1, 1), (2, 1), (3, 1), (4, 1);
+
+-- SERIES PROGRESOS EJERCICIOS --
