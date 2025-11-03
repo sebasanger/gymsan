@@ -4,6 +4,7 @@ import java.util.Set;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
@@ -17,6 +18,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,10 +45,16 @@ public class ProgresoEjercicio {
 
     @ManyToOne
     @JoinColumn(name = "progresos_rutinas_id", nullable = false)
-    private ProgresoEjercicio usuario;
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JsonBackReference
+    private ProgresoRutina progresoRutina;
 
     @ManyToOne
     @JoinColumn(name = "ejercicios_id", nullable = false)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JsonManagedReference
     private Ejercicio ejercicio;
 
     @ManyToMany(fetch = FetchType.EAGER)
