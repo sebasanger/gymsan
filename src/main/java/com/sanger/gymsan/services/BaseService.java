@@ -27,11 +27,8 @@ public abstract class BaseService<T, ID, R extends JpaRepository<T, ID>> {
     public List<T> findAll(boolean includingDeletedEntity) {
 
         List<T> all = repository.findAll();
-        if (all.isEmpty()) {
-            throw new EntitiesNotFoundException();
-        }
 
-        if (includingDeletedEntity) {
+        if (includingDeletedEntity || all.isEmpty()) {
             return all;
         }
 

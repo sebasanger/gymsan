@@ -30,13 +30,13 @@ insert into roles_usuarios (usuarios_id, roles_id) values (1,1);
 
 
 -- RUTINAS --
-insert into rutinas (id, nombre, descripcion, activa) values (1,'Rutina para seba Avanzada', "Rutina para pierna, pecho, espalda y biceps avanzada", true); 
+insert into rutinas (id, nombre, descripcion, deleted) values (1,'Rutina para seba Avanzada', "Rutina para pierna, pecho, espalda y biceps avanzada", false); 
 
 -- RUTINAS --
 
 
 -- RUTINAS USUARIOS --
-insert into rutinas_usuarios (usuarios_id, rutinas_id, activa, fecha_inicio, fecha_fin) values (1,1, true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+insert into rutinas_usuarios (usuarios_id, rutinas_id, deleted, fecha_inicio, fecha_fin) values (1,1, false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- RUTINAS USUARIOS --
 
@@ -56,18 +56,18 @@ insert into entrenamientos_rutina (rutinas_id, entrenamientos_id) values (1, 3);
 
 
 -- EJERCICIOS --
-insert into ejercicios (id, nombre, descripcion, categorias_id) values
-(1, 'Press banca plano con barra', 'Ejercicio de pecho con barra en banco plano', 1),
-(2, 'Press inclinado con mancuernas', 'Ejercicio de pecho superior en banco inclinado', 1),
-(3, 'Remo con barra', 'Ejercicio de espalda media con barra', 2),
-(4, 'Dominadas', 'Ejercicio de tracción corporal para espalda y bíceps', 2),
-(5, 'Sentadillas', 'Ejercicio compuesto para piernas y glúteos', 3),
-(6, 'Prensa de piernas', 'Ejercicio de pierna en máquina con carga guiada', 3),
-(7, 'Curl de bíceps con barra', 'Ejercicio de brazos enfocado en bíceps', 4),
-(8, 'Extensiones de tríceps en polea', 'Ejercicio de brazos enfocado en tríceps', 4),
-(9, 'Peso muerto', 'Ejercicio compuesto para piernas y espalda baja', 2),
-(10, 'Abdominales crunch', 'Ejercicio de abdomen tradicional en el suelo', 5),
-(11, 'Press banca plano con mancueras', 'Ejercicio de pecho con barra en banco plano', 1);
+insert into ejercicios (id, nombre, descripcion, categorias_id, deleted) values
+(1, 'Press banca plano con barra', 'Ejercicio de pecho con barra en banco plano', 1, false),
+(2, 'Press inclinado con mancuernas', 'Ejercicio de pecho superior en banco inclinado', 1, false),
+(3, 'Remo con barra', 'Ejercicio de espalda media con barra', 2, false),
+(4, 'Dominadas', 'Ejercicio de tracción corporal para espalda y bíceps', 2, false),
+(5, 'Sentadillas', 'Ejercicio compuesto para piernas y glúteos', 3, false),
+(6, 'Prensa de piernas', 'Ejercicio de pierna en máquina con carga guiada', 3, false),
+(7, 'Curl de bíceps con barra', 'Ejercicio de brazos enfocado en bíceps', 4, false),
+(8, 'Extensiones de tríceps en polea', 'Ejercicio de brazos enfocado en tríceps', 4, false),
+(9, 'Peso muerto', 'Ejercicio compuesto para piernas y espalda baja', 2, false),
+(10, 'Abdominales crunch', 'Ejercicio de abdomen tradicional en el suelo', 5, false),
+(11, 'Press banca plano con mancueras', 'Ejercicio de pecho con barra en banco plano', 1, false);
 -- EJERCICIOS --
 
 -- EJERCICIOS ENTRENAMIENTOS --
@@ -110,15 +110,15 @@ insert into videos_ejercicio (videos_id, ejercicios_id) values (1, 1);
 -- FOTOS VIDEOS --
 
 -- MEMBRESIAS --
-insert into membresias (id, nombre, precio, descripcion, cantidad_clases, activa) values 
-(1, "Membresia estandar", 50000, "Membresia basica", 0, true),
-(2, "Membresia gold", 55000, "Membresia con adicional a 5 clases a inscribirse", 5, true);
+insert into membresias (id, nombre, precio, descripcion, cantidad_clases, deleted) values 
+(1, "Membresia estandar", 50000, "Membresia basica", 0, false),
+(2, "Membresia gold", 55000, "Membresia con adicional a 5 clases a inscribirse", 5, false);
 -- MEMBRESIAS --
 
 -- MEMBRESIAS USUARIOS --
-insert into membresias_usuarios (id, membresias_id, usuarios_id, fecha_inscripcion, fecha_vencimiento, activa) values 
-(1, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, false),
-(2, 2, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
+insert into membresias_usuarios (id, membresias_id, usuarios_id, fecha_inscripcion, fecha_vencimiento, deleted) values 
+(1, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true),
+(2, 2, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, false);
 -- MEMBRESIAS USUARIOS --
 
 -- PAGOS --

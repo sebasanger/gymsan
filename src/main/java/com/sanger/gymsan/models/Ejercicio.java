@@ -41,6 +41,8 @@ public class Ejercicio {
     @Column(length = 255)
     private String descripcion;
 
+    private Boolean deleted;
+
     @ManyToOne
     @JoinColumn(name = "categorias_id")
     private Categoria categoria;

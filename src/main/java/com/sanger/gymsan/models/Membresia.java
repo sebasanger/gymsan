@@ -37,7 +37,7 @@ public class Membresia {
 
     private Double precio;
 
-    private Boolean activa;
+    private Boolean deleted;
 
     @Column(length = 255)
     private String descripcion;

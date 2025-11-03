@@ -41,6 +41,6 @@ public class RutinaUsuario {
     @Column(name = "fecha_fin")
     private LocalDate fechaFin;
 
-    private Boolean activa;
+    private Boolean deleted;
 
 }

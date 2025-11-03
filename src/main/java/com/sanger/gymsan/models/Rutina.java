@@ -43,7 +43,7 @@ public class Rutina {
     @Column(length = 255)
     private String descripcion;
 
-    private Boolean activa;
+    private Boolean deleted;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

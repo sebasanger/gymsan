@@ -44,7 +44,7 @@ public class MembresiaUsuario {
     @Column(name = "fecha_vencimiento")
     private LocalDateTime fechaVencimiento;
 
-    private Boolean activa;
+    private Boolean deleted;
 
     @ManyToMany
     @JoinTable(
