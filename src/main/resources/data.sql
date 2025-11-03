@@ -30,7 +30,7 @@ insert into roles_usuarios (usuarios_id, roles_id) values (1,1);
 
 
 -- RUTINAS --
-insert into rutinas (id, nombre, descripcion, deleted) values (1,'Rutina para seba Avanzada', "Rutina para pierna, pecho, espalda y biceps avanzada", false); 
+insert into rutinas (id, nombre, descripcion, deleted, creador) values (1,'Rutina para seba Avanzada', "Rutina para pierna, pecho, espalda y biceps avanzada", false, 1); 
 
 -- RUTINAS --
 

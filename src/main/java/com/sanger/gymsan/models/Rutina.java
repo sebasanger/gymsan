@@ -5,6 +5,7 @@ import java.util.Set;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
@@ -17,6 +18,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,6 +46,11 @@ public class Rutina {
     private String descripcion;
 
     private Boolean deleted;
+
+    @OneToOne()
+    @JoinColumn(name = "creador", referencedColumnName = "id")
+    @JsonIgnore
+    private Usuario creador;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
