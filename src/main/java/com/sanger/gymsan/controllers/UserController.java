@@ -43,7 +43,7 @@ public class UserController {
 
     @GetMapping("")
     public ResponseEntity<?> getUsers() {
-        List<Usuario> result = userEntityService.findAll();
+        List<Usuario> result = userEntityService.findAll(false);
 
         if (result.isEmpty()) {
             throw new UserNotFoundException();

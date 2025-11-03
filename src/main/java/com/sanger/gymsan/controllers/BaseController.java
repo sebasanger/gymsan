@@ -28,7 +28,18 @@ public abstract class BaseController<E, ID, S extends BaseService<E, ID, ?>> {
 
     @GetMapping("")
     public ResponseEntity<?> getAll() {
-        List<E> result = service.findAll();
+        List<E> result = service.findAll(false);
+
+        if (result.isEmpty()) {
+            throw new EntityNotFoundException();
+        } else {
+            return ResponseEntity.ok().body(result);
+        }
+    }
+
+    @GetMapping("/includedDeleted")
+    public ResponseEntity<?> getAllIncludedDeleted() {
+        List<E> result = service.findAll(true);
 
         if (result.isEmpty()) {
             throw new EntityNotFoundException();

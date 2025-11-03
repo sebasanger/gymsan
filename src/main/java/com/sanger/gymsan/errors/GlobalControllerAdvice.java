@@ -1,6 +1,5 @@
 package com.sanger.gymsan.errors;
 
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.sanger.gymsan.exceptions.EntitiesNotFoundException;
 import com.sanger.gymsan.exceptions.FindEntityByIdNotFoundException;
 import com.sanger.gymsan.exceptions.NewUserWithDifferentPasswordsException;
 import com.sanger.gymsan.exceptions.PasswordNotMismatch;
@@ -32,7 +32,7 @@ import jakarta.persistence.EntityNotFoundException;
 public class GlobalControllerAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({EntityNotFoundException.class, SearchEntityNoResultException.class, UserNotFoundException.class,
-        FindEntityByIdNotFoundException.class})
+        FindEntityByIdNotFoundException.class, EntitiesNotFoundException.class})
     public ResponseEntity<ApiError> handleNotFound(Exception ex) {
         ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);

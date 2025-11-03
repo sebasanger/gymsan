@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.sanger.gymsan.exceptions.EntitiesNotFoundException;
+
 public abstract class BaseService<T, ID, R extends JpaRepository<T, ID>> {
 
     @Autowired
@@ -22,8 +24,33 @@ public abstract class BaseService<T, ID, R extends JpaRepository<T, ID>> {
         return repository.findById(id);
     }
 
-    public List<T> findAll() {
-        return repository.findAll();
+    public List<T> findAll(boolean includingDeletedEntity) {
+
+        List<T> all = repository.findAll();
+        if (all.isEmpty()) {
+            throw new EntitiesNotFoundException();
+        }
+
+        if (includingDeletedEntity) {
+            return all;
+        }
+
+        try {
+            Field deletedField = all.get(0).getClass().getDeclaredField("deleted");
+            deletedField.setAccessible(true);
+            return all.stream()
+                    .filter(e -> {
+                        try {
+                            return !(Boolean) deletedField.get(e);
+                        } catch (IllegalAccessException ex) {
+                            throw new RuntimeException("No se puede acceder al campo deleted", ex);
+                        }
+                    })
+                    .toList();
+        } catch (NoSuchFieldException e) {
+            return all;
+        }
+
     }
 
     public Page<T> findAll(Pageable pageable) {
