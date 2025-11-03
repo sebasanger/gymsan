@@ -1,17 +1,15 @@
 package com.sanger.gymsan.services;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sanger.gymsan.dto.rutina.AddRemoveUserRutinaDto;
 import com.sanger.gymsan.dto.rutina.CreateRutinaDto;
 import com.sanger.gymsan.dto.rutina.UpdateRutinaDto;
-import com.sanger.gymsan.models.Categoria;
-import com.sanger.gymsan.models.Ejercicio;
 import com.sanger.gymsan.models.Entrenamiento;
 import com.sanger.gymsan.models.Rutina;
 import com.sanger.gymsan.models.Usuario;
@@ -63,6 +61,34 @@ public class RutinaService extends BaseService<Rutina, Long, RutinaRepository> {
                 .orElseThrow(() -> new EntityNotFoundException("Rutina no encontrado"));
 
         modelMapper.map(updateEntity, rutina);
+
+        return this.repository.save(rutina);
+
+    }
+
+    public Rutina agregarUsuarioRutina(AddRemoveUserRutinaDto addRemoveUserRutinaDto, Usuario user) {
+
+        Usuario usuario = this.usuarioService.findById(addRemoveUserRutinaDto.getUserId())
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+
+        Rutina rutina = this.repository.findById(addRemoveUserRutinaDto.getRutinaId())
+                .orElseThrow(() -> new EntityNotFoundException("Rutina no encontrado"));
+
+        rutina.getUsuarios().add(usuario);
+
+        return this.repository.save(rutina);
+
+    }
+
+    public Rutina eliminarUsuarioRutina(AddRemoveUserRutinaDto addRemoveUserRutinaDto, Usuario user) {
+
+        Usuario usuario = this.usuarioService.findById(addRemoveUserRutinaDto.getUserId())
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+
+        Rutina rutina = this.repository.findById(addRemoveUserRutinaDto.getRutinaId())
+                .orElseThrow(() -> new EntityNotFoundException("Rutina no encontrado"));
+
+        rutina.getUsuarios().remove(usuario);
 
         return this.repository.save(rutina);
 
