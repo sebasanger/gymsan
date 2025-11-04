@@ -1,11 +1,20 @@
 package com.sanger.gymsan.services;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sanger.gymsan.dto.progresoRutina.CheckOutDto;
+import com.sanger.gymsan.dto.progresoRutina.CreateProgresoRutinaDto;
+import com.sanger.gymsan.models.Entrenamiento;
 import com.sanger.gymsan.models.ProgresoRutina;
+import com.sanger.gymsan.models.Rutina;
+import com.sanger.gymsan.models.Usuario;
 import com.sanger.gymsan.repository.ProgresoRutinaRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -13,4 +22,41 @@ import lombok.AllArgsConstructor;
 @Transactional
 public class ProgresoRutinaService extends BaseService<ProgresoRutina, Long, ProgresoRutinaRepository> {
 
+    private final UsuarioService usuarioService;
+
+    private final RutinaService rutinaService;
+
+    private final EntrenamientoService entrenamientoService;
+
+    public ProgresoRutina save(CreateProgresoRutinaDto newEntity, Usuario user) {
+        ProgresoRutina progresoRutina = new ProgresoRutina();
+
+        Usuario usuarioActual = this.usuarioService.findById(user.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+
+        Rutina rutina = this.rutinaService.findById(newEntity.getRutinaId())
+                .orElseThrow(() -> new EntityNotFoundException("Rutina no encontrada"));
+
+        Entrenamiento entrenamiento = this.entrenamientoService.findById(newEntity.getEntrenamientoId())
+                .orElseThrow(() -> new EntityNotFoundException("Entrenamiento no encontrado"));
+
+        progresoRutina.setUsuario(usuarioActual);
+        progresoRutina.setEntrenamiento(entrenamiento);
+        progresoRutina.setRutina(rutina);
+        progresoRutina.setCheckIn(LocalDateTime.now());
+        progresoRutina.setFecha(LocalDate.now());
+
+        return this.repository.save(progresoRutina);
+
+    }
+
+    public ProgresoRutina checkOut(CheckOutDto checkOutDto, Usuario user) {
+        ProgresoRutina progresoRutina = this.repository.findById(checkOutDto.getProgresoRutinaId())
+                .orElseThrow(() -> new EntityNotFoundException("Progreso rutina no encontrado"));
+
+        progresoRutina.setCheckOut(LocalDateTime.now());
+
+        return this.repository.save(progresoRutina);
+
+    }
 }
