@@ -35,9 +35,7 @@ public class Serie {
 
     private Integer repeticiones;
 
-    private Integer peso;
-
-    private Boolean realizada;
+    private Double peso;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

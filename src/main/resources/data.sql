@@ -145,9 +145,9 @@ insert into progresos_ejercicios (id, progresos_rutinas_id, ejercicios_id, canti
 
 
 -- SERIES --
-insert into series (id, repeticiones, peso, realizada) values (1, 10, 140, true), (2, 9, 140, true), (3, 8, 140, true), (4, 10, 120, false);
+insert into series (id, repeticiones, peso) values (1, 10, 140), (2, 9, 140), (3, 8, 140), (4, 10, 120);
 
-insert into series (id, repeticiones, peso, realizada) values (5, 8, 100, true), (6, 9, 100, true), (7, 7, 100, true), (8, 8, 100, true);
+insert into series (id, repeticiones, peso) values (5, 8, 100), (6, 9, 100), (7, 7, 100), (8, 8, 100);
 -- SERIES --
 
 
