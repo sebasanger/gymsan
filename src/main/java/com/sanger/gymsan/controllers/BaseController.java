@@ -77,6 +77,12 @@ public abstract class BaseController<E, ID, S extends BaseService<E, ID, ?>> {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.update(entity));
     }
 
+    @PutMapping({"", "/recover/{id}"})
+    public ResponseEntity<E> recover(@PathVariable(required = true) ID id) {
+        service.recover(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable ID id) {
         E entity = service.findById(id).orElseThrow(() -> new EntityNotFoundException());

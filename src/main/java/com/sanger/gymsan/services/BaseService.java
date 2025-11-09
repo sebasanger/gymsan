@@ -9,6 +9,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.sanger.gymsan.exceptions.EntitiesNotFoundException;
+import com.sanger.gymsan.exceptions.UserNotFoundException;
+
+import jakarta.persistence.EntityNotFoundException;
+
 public abstract class BaseService<T, ID, R extends JpaRepository<T, ID>> {
 
     @Autowired
@@ -65,6 +70,19 @@ public abstract class BaseService<T, ID, R extends JpaRepository<T, ID>> {
         } catch (NoSuchFieldException e) {
             repository.delete(t);
         } catch (IllegalAccessException e) {
+            throw new RuntimeException("No se puede acceder al campo deleted", e);
+        }
+    }
+
+    public void recover(ID id) {
+        try {
+            T entity = this.findById(id).orElseThrow(() -> new EntityNotFoundException());
+            Field deletedField = entity.getClass().getDeclaredField("deleted");
+            deletedField.setAccessible(true);
+            deletedField.set(entity, false);
+            repository.save(entity);
+
+        } catch (IllegalAccessException | NoSuchFieldException e) {
             throw new RuntimeException("No se puede acceder al campo deleted", e);
         }
     }

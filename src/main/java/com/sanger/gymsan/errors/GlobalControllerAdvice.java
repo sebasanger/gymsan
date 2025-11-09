@@ -73,10 +73,10 @@ public class GlobalControllerAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler({DataIntegrityViolationException.class})
     public ResponseEntity<ApiError> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
 
-        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST,
+        ApiError apiError = new ApiError(HttpStatus.CONFLICT,
                 ex.getMostSpecificCause().getMessage() + " constrain validation exception");
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(apiError);
 
     }
 
@@ -85,7 +85,6 @@ public class GlobalControllerAdvice extends ResponseEntityExceptionHandler {
 
         ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR,
                 "Error al enviar el mail");
-
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiError);
 
     }
