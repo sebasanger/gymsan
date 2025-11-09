@@ -69,6 +69,8 @@ public class Usuario implements UserDetails {
 
     private Boolean enabled;
 
+    private Boolean deleted;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "roles_usuarios",

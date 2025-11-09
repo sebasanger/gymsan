@@ -30,6 +30,7 @@ import com.sanger.gymsan.exceptions.UserNotFoundException;
 import com.sanger.gymsan.models.Usuario;
 import com.sanger.gymsan.services.UsuarioService;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -47,6 +48,17 @@ public class UserController {
 
         if (result.isEmpty()) {
             throw new UserNotFoundException();
+        } else {
+            return ResponseEntity.ok().body(result);
+        }
+    }
+
+    @GetMapping("/includedDeleted")
+    public ResponseEntity<?> getAllIncludedDeleted() {
+        List<Usuario> result = userEntityService.findAll(true);
+
+        if (result.isEmpty()) {
+            throw new EntityNotFoundException();
         } else {
             return ResponseEntity.ok().body(result);
         }
