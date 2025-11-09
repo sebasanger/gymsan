@@ -58,17 +58,17 @@ insert into entrenamientos_rutina (rutinas_id, entrenamientos_id) values (1, 3);
 
 -- EJERCICIOS --
 insert into ejercicios (id, nombre, descripcion, categorias_id, deleted) values
-(1, 'Press banca plano con barra', 'Ejercicio de pecho con barra en banco plano', 1, false),
-(2, 'Press inclinado con mancuernas', 'Ejercicio de pecho superior en banco inclinado', 1, false),
-(3, 'Remo con barra', 'Ejercicio de espalda media con barra', 2, false),
-(4, 'Dominadas', 'Ejercicio de tracción corporal para espalda y bíceps', 2, false),
-(5, 'Sentadillas', 'Ejercicio compuesto para piernas y glúteos', 3, false),
-(6, 'Prensa de piernas', 'Ejercicio de pierna en máquina con carga guiada', 3, false),
-(7, 'Curl de bíceps con barra', 'Ejercicio de brazos enfocado en bíceps', 4, false),
-(8, 'Extensiones de tríceps en polea', 'Ejercicio de brazos enfocado en tríceps', 4, false),
-(9, 'Peso muerto', 'Ejercicio compuesto para piernas y espalda baja', 2, false),
-(10, 'Abdominales crunch', 'Ejercicio de abdomen tradicional en el suelo', 5, false),
-(11, 'Press banca plano con mancueras', 'Ejercicio de pecho con barra en banco plano', 1, false);
+(1, 'press banca plano con barra', 'Ejercicio de pecho con barra en banco plano', 1, false),
+(2, 'press inclinado con mancuernas', 'Ejercicio de pecho superior en banco inclinado', 1, false),
+(3, 'remo con barra', 'Ejercicio de espalda media con barra', 2, false),
+(4, 'dominadas', 'Ejercicio de tracción corporal para espalda y bíceps', 2, false),
+(5, 'sentadillas', 'Ejercicio compuesto para piernas y glúteos', 3, false),
+(6, 'prensa de piernas', 'Ejercicio de pierna en máquina con carga guiada', 3, false),
+(7, 'curl de bíceps con barra', 'Ejercicio de brazos enfocado en bíceps', 4, false),
+(8, 'extensiones de tríceps en polea', 'Ejercicio de brazos enfocado en tríceps', 4, false),
+(9, 'peso muerto', 'Ejercicio compuesto para piernas y espalda baja', 2, false),
+(10, 'abdominales crunch', 'Ejercicio de abdomen tradicional en el suelo', 5, false),
+(11, 'press banca plano con mancueras', 'Ejercicio de pecho con barra en banco plano', 1, false);
 -- EJERCICIOS --
 
 -- EJERCICIOS ENTRENAMIENTOS --

@@ -36,6 +36,7 @@ public class EjercicioService extends BaseService<Ejercicio, Long, EjercicioRepo
         ejercicio.setNombre(newEntity.getNombre());
         ejercicio.setDescripcion(newEntity.getDescripcion());
         ejercicio.setCategoria(categoria);
+        ejercicio.setDeleted(false);
 
         //TODO: guardar fotos y videos
         return this.repository.save(ejercicio);
