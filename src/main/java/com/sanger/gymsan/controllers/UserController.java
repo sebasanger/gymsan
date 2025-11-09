@@ -86,13 +86,13 @@ public class UserController {
         return ResponseEntity.ok().body(user);
     }
 
-    @PostMapping("")
+    @PostMapping("save")
     public ResponseEntity<GetUsersDto> newUser(@Valid @RequestBody CreateUserDto newUser) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(userDtoConverter.convertUserEntityToGetUserDto(userEntityService.newUser(newUser)));
     }
 
-    @PutMapping("")
+    @PutMapping("update")
     public ResponseEntity<GetUsersDto> updateUser(@Valid @RequestBody UpdateUserDto user) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(userDtoConverter.convertUserEntityToGetUserDto(userEntityService.updateUser(user)));
@@ -125,6 +125,12 @@ public class UserController {
     @PostMapping("/checkEmailIsValid")
     public boolean checkEmailIsValid(@Valid @RequestBody CheckEmailIsValidDto checkEmailIsValidDto) {
         return userEntityService.checkEmailIsValid(checkEmailIsValidDto);
+    }
+
+    @PutMapping({"", "/recover/{id}"})
+    public ResponseEntity<Usuario> recover(@PathVariable(required = true) Long id) {
+        userEntityService.recover(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

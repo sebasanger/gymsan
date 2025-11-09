@@ -30,19 +30,19 @@ public class UserDtoConverter {
 
     public GetUserDetailsDto convertUserEntityToGetUserDetailsDto(Usuario user) {
         return GetUserDetailsDto.builder().id(user.getId())
-                .email(user.getEmail()).enabled(user.isEnabled())
+                .email(user.getEmail()).enabled(user.isEnabled()).deleted(user.getDeleted()).documento(user.getDocumento())
                 .createdAt(user.getCreatedAt()).lastPasswordChangeAt(user.getLastPasswordChangeAt())
                 .roles(user.getRoles().stream().map(Rol::getRol).collect(Collectors.toSet())).build();
     }
 
     public Usuario convertCreateUserDtoToUserEntity(CreateUserDto newUser) {
         return Usuario.builder()
-                .password(passwordEncoder.encode("myPasswordEncoded12313123")).enabled(false)
+                .password(passwordEncoder.encode("myPasswordEncoded12313123")).enabled(false).deleted(false).documento(newUser.getDocumento())
                 .fullName(newUser.getFullName()).email(newUser.getEmail()).roles(rolService.getAllRolesFromStrings(newUser.getRoles())).build();
     }
 
     public Usuario convertUpdateUserDtoToUserEntity(UpdateUserDto user) {
-        return Usuario.builder().fullName(user.getFullName())
+        return Usuario.builder().fullName(user.getFullName()).username(user.getEmail()).documento(user.getDocumento())
                 .email(user.getEmail()).roles(rolService.getAllRolesFromStrings(user.getRoles())).build();
     }
 

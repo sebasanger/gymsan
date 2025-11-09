@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.MailAuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -19,11 +20,13 @@ import com.sanger.gymsan.exceptions.PasswordNotMismatch;
 import com.sanger.gymsan.exceptions.UserNotFoundException;
 import com.sanger.gymsan.models.Usuario;
 import com.sanger.gymsan.repository.UserEntityRepository;
-
+import org.springframework.beans.factory.annotation.Value;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UsuarioService extends BaseService<Usuario, Long, UserEntityRepository> {
 
     private final UserDtoConverter userDtoConverter;
@@ -33,6 +36,12 @@ public class UsuarioService extends BaseService<Usuario, Long, UserEntityReposit
     private final VerificationTokenService verificationTokenService;
 
     private final RolService rolService;
+
+    @Value("${base.url.frontend}")
+    private String urlFrontend;
+
+    @Value("${redirect.path.active.user}")
+    private String activateUserPath;
 
     public Optional<Usuario> findUserByUsername(String username) {
         return this.repository.findByUsername(username);
@@ -47,7 +56,8 @@ public class UsuarioService extends BaseService<Usuario, Long, UserEntityReposit
 
         Usuario userEntity = userDtoConverter.convertCreateUserDtoToUserEntity(newUser);
         Usuario userSaved = save(userEntity);
-        verificationTokenService.sendEmailVerification(userSaved, newUser.getUrlRedirect());
+
+        verificationTokenService.sendEmailVerification(userSaved, this.urlFrontend + "/" + this.activateUserPath);
 
         return userSaved;
 

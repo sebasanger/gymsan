@@ -4,8 +4,6 @@ import java.util.Set;
 
 import org.hibernate.validator.constraints.Length;
 
-import com.sanger.gymsan.models.Rol;
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -25,6 +23,9 @@ public class UpdateUserDto {
 
     @NotNull
     private Long id;
+
+    @NotNull
+    private String documento;
 
     private String avatar;
 

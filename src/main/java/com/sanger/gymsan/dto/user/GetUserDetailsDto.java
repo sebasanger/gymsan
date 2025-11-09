@@ -20,7 +20,9 @@ public class GetUserDetailsDto {
     private String username;
     private String avatar;
     private String fullName;
+    private String documento;
     private String email;
+    private Boolean deleted;
     private String invoiceType;
     private Set<String> roles;
     private boolean enabled;

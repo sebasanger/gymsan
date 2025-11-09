@@ -35,7 +35,7 @@ public class CreateUserDto {
     @NotEmpty()
     private Set<String> roles;
 
-    @NotBlank
-    private String urlRedirect;
+    @NotEmpty()
+    private String documento;
 
 }
