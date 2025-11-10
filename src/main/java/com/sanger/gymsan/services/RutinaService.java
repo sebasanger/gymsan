@@ -40,8 +40,9 @@ public class RutinaService extends BaseService<Rutina, Long, RutinaRepository> {
 
         Set<Entrenamiento> entrenamientos = new HashSet<>();
 
-        newEntity.getEntrenamientos().forEach(entrenamientoDto -> {
-            Entrenamiento entrenamiento = this.entrenamientoService.save(entrenamientoDto, user);
+        newEntity.getEntrenamientos().forEach(entr -> {
+
+            Entrenamiento entrenamiento = this.entrenamientoService.save(entr, user);
             entrenamientos.add(entrenamiento);
         });
 

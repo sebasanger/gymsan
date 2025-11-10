@@ -1,9 +1,6 @@
-package com.sanger.gymsan.dto.rutina;
+package com.sanger.gymsan.dto.ejercicioEntrenamiento;
 
 import java.util.Set;
-
-import com.sanger.gymsan.dto.ejercicioEntrenamiento.CreateEjercicioEntrenamientoDto;
-import com.sanger.gymsan.dto.entrenamiento.CreateEntrenamientoDto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -17,17 +14,17 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CreateRutinaDto {
+public class UpdateEjercicioEntrenamientoDto {
 
     @NotNull
+    private Long id;
+
     private String nombre;
 
-    @NotNull
     private String descripcion;
 
-    private Long userId;
+    private String categoria;
 
-    @NotNull
-    private Set<CreateEntrenamientoDto> entrenamientos;
+    private Set<Long> ejercicios;
 
 }

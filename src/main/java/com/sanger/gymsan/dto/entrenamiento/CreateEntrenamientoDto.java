@@ -2,6 +2,8 @@ package com.sanger.gymsan.dto.entrenamiento;
 
 import java.util.Set;
 
+import com.sanger.gymsan.dto.ejercicioEntrenamiento.CreateEjercicioEntrenamientoDto;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,6 +28,6 @@ public class CreateEntrenamientoDto {
     private String categoria;
 
     @NotNull
-    private Set<Long> ejercicios;
+    private Set<CreateEjercicioEntrenamientoDto> ejercicioEntrenamiento;
 
 }

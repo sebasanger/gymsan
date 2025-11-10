@@ -13,6 +13,7 @@ import com.sanger.gymsan.dto.entrenamiento.CreateEntrenamientoDto;
 import com.sanger.gymsan.dto.entrenamiento.UpdateEntrenamientoDto;
 import com.sanger.gymsan.models.Categoria;
 import com.sanger.gymsan.models.Ejercicio;
+import com.sanger.gymsan.models.EjercicioEntrenamiento;
 import com.sanger.gymsan.models.Entrenamiento;
 import com.sanger.gymsan.models.Usuario;
 import com.sanger.gymsan.repository.CategoriaRepository;
@@ -36,23 +37,32 @@ public class EntrenamientoService extends BaseService<Entrenamiento, Long, Entre
 
     public Entrenamiento save(CreateEntrenamientoDto newEntity, Usuario user) {
         Entrenamiento entrenamiento = new Entrenamiento();
+
         Categoria categoria = this.categoriaRepoCategoriaRepository.findByCategoria(newEntity.getCategoria())
                 .orElseThrow(() -> new EntityNotFoundException("Categoria no encontrada"));
 
-        Set<Ejercicio> ejercicios = new HashSet<>();
-
-        newEntity.getEjercicios().forEach(ejercicioId -> {
-            Ejercicio ejercicio = this.ejercicioRepository.findById(ejercicioId)
-                    .orElseThrow(() -> new EntityNotFoundException("Categoria no encontrada"));
-            ejercicios.add(ejercicio);
-        });
-
-        //entrenamiento.setEjercicios(ejercicios);
         entrenamiento.setNombre(newEntity.getNombre());
         entrenamiento.setDescripcion(newEntity.getDescripcion());
         entrenamiento.setCategoria(categoria);
         entrenamiento.setDeleted(false);
 
+        Set<EjercicioEntrenamiento> ejerciciosEntrenamientos = new HashSet<>();
+
+        newEntity.getEjercicioEntrenamiento().forEach(ejerEntrenamiento -> {
+            Ejercicio ejercicio = this.ejercicioRepository.findById(ejerEntrenamiento.getEjercicioId())
+                    .orElseThrow(() -> new EntityNotFoundException("Ejercicio no encontrado"));
+
+            EjercicioEntrenamiento ejercicioEntrenamiento = new EjercicioEntrenamiento();
+            ejercicioEntrenamiento.setEjercicio(ejercicio);
+            ejercicioEntrenamiento.setEntrenamiento(entrenamiento);
+            ejercicioEntrenamiento.setSeries(ejerEntrenamiento.getSeries());
+            ejercicioEntrenamiento.setRepeticiones(ejerEntrenamiento.getRepeticiones());
+            ejercicioEntrenamiento.setPeso(ejerEntrenamiento.getPeso());
+
+            ejerciciosEntrenamientos.add(ejercicioEntrenamiento);
+        });
+
+        entrenamiento.setEjerciciosEntrenamientos(ejerciciosEntrenamientos);
         return this.repository.save(entrenamiento);
 
     }
