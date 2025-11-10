@@ -47,7 +47,7 @@ public class EntrenamientoService extends BaseService<Entrenamiento, Long, Entre
             ejercicios.add(ejercicio);
         });
 
-        entrenamiento.setEjercicios(ejercicios);
+        //entrenamiento.setEjercicios(ejercicios);
         entrenamiento.setNombre(newEntity.getNombre());
         entrenamiento.setDescripcion(newEntity.getDescripcion());
         entrenamiento.setCategoria(categoria);
@@ -78,7 +78,7 @@ public class EntrenamientoService extends BaseService<Entrenamiento, Long, Entre
                         ejercicios.add(ejercicio);
                     });
 
-                    entrenamiento.setEjercicios(ejercicios);
+                    // entrenamiento.setEjercicios(ejercicios);
                 });
 
         modelMapper.map(updateEntity, entrenamiento);

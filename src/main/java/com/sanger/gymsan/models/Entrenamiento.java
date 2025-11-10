@@ -3,25 +3,9 @@ package com.sanger.gymsan.models;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name = "entrenamientos")
@@ -51,21 +35,14 @@ public class Entrenamiento {
             name = "entrenamientos_rutina",
             joinColumns = @JoinColumn(name = "entrenamientos_id"),
             inverseJoinColumns = @JoinColumn(name = "rutinas_id"))
-    @JsonIgnore
+    @JsonBackReference("rutina-entrenamientos")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @JsonBackReference
     private Set<Rutina> rutinas;
 
-    @ManyToMany
-    @JoinTable(
-            name = "ejercicios_entrenamientos",
-            joinColumns = @JoinColumn(name = "entrenamientos_id"),
-            inverseJoinColumns = @JoinColumn(name = "ejercicios_id")
-    )
-    @JsonManagedReference
+    @OneToMany(mappedBy = "entrenamiento", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("entrenamiento-ejercicios")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<Ejercicio> ejercicios;
-
+    private Set<EjercicioEntrenamiento> ejerciciosEntrenamientos;
 }

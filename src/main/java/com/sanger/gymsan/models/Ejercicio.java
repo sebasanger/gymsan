@@ -3,8 +3,8 @@ package com.sanger.gymsan.models;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -15,6 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -47,35 +48,27 @@ public class Ejercicio {
     @JoinColumn(name = "categorias_id")
     private Categoria categoria;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "ejercicios_entrenamientos",
-            joinColumns = @JoinColumn(name = "ejercicios_id"),
-            inverseJoinColumns = @JoinColumn(name = "entrenamientos_id")
-    )
-    @JsonBackReference
+    @OneToMany(mappedBy = "ejercicio", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference("ejercicio-ejercEntrenamientos")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<Entrenamiento> entrenamientos;
+    private Set<EjercicioEntrenamiento> ejerciciosEntrenamientos;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "fotos_ejercicio",
-            joinColumns = @JoinColumn(name = "fotos_id"),
-            inverseJoinColumns = @JoinColumn(name = "ejercicios_id"))
+            joinColumns = @JoinColumn(name = "ejercicios_id"),
+            inverseJoinColumns = @JoinColumn(name = "fotos_id"))
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @JsonManagedReference
     private Set<Foto> fotos;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "videos_ejercicio",
-            joinColumns = @JoinColumn(name = "videos_id"),
-            inverseJoinColumns = @JoinColumn(name = "ejercicios_id"))
+            joinColumns = @JoinColumn(name = "ejercicios_id"),
+            inverseJoinColumns = @JoinColumn(name = "videos_id"))
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @JsonManagedReference
     private Set<Video> videos;
-
 }

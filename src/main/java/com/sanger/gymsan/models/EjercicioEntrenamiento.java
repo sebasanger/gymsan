@@ -2,19 +2,11 @@ package com.sanger.gymsan.models;
 
 import java.util.Set;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name = "ejercicios_entrenamientos")
@@ -28,12 +20,14 @@ public class EjercicioEntrenamiento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "entrenamientos_id")
+    @JsonBackReference("entrenamiento-ejercicios")
     private Entrenamiento entrenamiento;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ejercicios_id")
+    @JsonManagedReference("ejercicio-ejercEntrenamientos")
     private Ejercicio ejercicio;
 
     private Integer series;
@@ -44,8 +38,8 @@ public class EjercicioEntrenamiento {
     @JoinTable(
             name = "ejercicios_alternativos",
             joinColumns = @JoinColumn(name = "ejercicio_entrenamiento_id"),
-            inverseJoinColumns = @JoinColumn(name = "alternativo_id")
-    )
+            inverseJoinColumns = @JoinColumn(name = "alternativo_id"))
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Set<EjercicioEntrenamiento> ejerciciosAlternativos;
-
 }
