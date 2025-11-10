@@ -27,16 +27,16 @@ public class RutinaService extends BaseService<Rutina, Long, RutinaRepository> {
 
     private final EntrenamientoService entrenamientoService;
 
-    private final ModelMapper modelMapper;
-
     public Rutina save(CreateRutinaDto newEntity, Usuario user) {
         Rutina rutina = new Rutina();
 
-        Usuario usuarioDestino = this.usuarioService.findById(newEntity.getUserId())
-                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
-
         Set<Usuario> usuarioDestinoList = new HashSet<>();
-        usuarioDestinoList.add(usuarioDestino);
+        newEntity.getUsuariosId().forEach(us -> {
+
+            Usuario usuario = this.usuarioService.findById(us)
+                    .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+            usuarioDestinoList.add(usuario);
+        });
 
         Set<Entrenamiento> entrenamientos = new HashSet<>();
 
