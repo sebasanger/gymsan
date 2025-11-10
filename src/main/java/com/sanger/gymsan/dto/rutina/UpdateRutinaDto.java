@@ -2,6 +2,8 @@ package com.sanger.gymsan.dto.rutina;
 
 import java.util.Set;
 
+import com.sanger.gymsan.dto.entrenamiento.CreateEntrenamientoDto;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,8 +25,8 @@ public class UpdateRutinaDto {
 
     private String descripcion;
 
-    private String categoria;
+    private Long userId;
 
-    private Set<Long> ejercicios;
+    private Set<CreateEntrenamientoDto> entrenamientos;
 
 }

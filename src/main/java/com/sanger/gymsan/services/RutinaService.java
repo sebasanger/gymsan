@@ -61,7 +61,26 @@ public class RutinaService extends BaseService<Rutina, Long, RutinaRepository> {
         Rutina rutina = this.repository.findById(updateEntity.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Rutina no encontrado"));
 
-        modelMapper.map(updateEntity, rutina);
+        Usuario usuarioDestino = this.usuarioService.findById(updateEntity.getUserId())
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+
+        Set<Usuario> usuarioDestinoList = new HashSet<>();
+        usuarioDestinoList.add(usuarioDestino);
+
+        Set<Entrenamiento> entrenamientos = new HashSet<>();
+
+        updateEntity.getEntrenamientos().forEach(entr -> {
+
+            Entrenamiento entrenamiento = this.entrenamientoService.save(entr, user);
+            entrenamientos.add(entrenamiento);
+        });
+
+        rutina.setUsuarios(usuarioDestinoList);
+        rutina.setEntrenamientos(entrenamientos);
+        //rutina.setCreador(user);
+        rutina.setNombre(updateEntity.getNombre());
+        rutina.setDescripcion(updateEntity.getDescripcion());
+        rutina.setDeleted(false);
 
         return this.repository.save(rutina);
 
