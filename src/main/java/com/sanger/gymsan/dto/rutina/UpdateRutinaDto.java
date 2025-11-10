@@ -21,12 +21,15 @@ public class UpdateRutinaDto {
     @NotNull
     private Long id;
 
+    @NotNull
     private String nombre;
 
+    @NotNull
     private String descripcion;
 
-    private Long userId;
+    private Set<Long> usuariosId;
 
+    @NotNull
     private Set<CreateEntrenamientoDto> entrenamientos;
 
 }

@@ -6,6 +6,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
@@ -59,7 +61,8 @@ public class Rutina {
             inverseJoinColumns = @JoinColumn(name = "usuarios_id"))
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @JsonBackReference
+    @JsonManagedReference
+    @JsonIncludeProperties({"id", "fullName", "documento"})
     private Set<Usuario> usuarios;
 
     @ManyToMany(fetch = FetchType.LAZY)

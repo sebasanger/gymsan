@@ -48,7 +48,7 @@ public class RutinaService extends BaseService<Rutina, Long, RutinaRepository> {
 
         rutina.setUsuarios(usuarioDestinoList);
         rutina.setEntrenamientos(entrenamientos);
-        //rutina.setCreador(user);
+        rutina.setCreador(user);
         rutina.setNombre(newEntity.getNombre());
         rutina.setDescripcion(newEntity.getDescripcion());
         rutina.setDeleted(false);
@@ -61,11 +61,13 @@ public class RutinaService extends BaseService<Rutina, Long, RutinaRepository> {
         Rutina rutina = this.repository.findById(updateEntity.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Rutina no encontrado"));
 
-        Usuario usuarioDestino = this.usuarioService.findById(updateEntity.getUserId())
-                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
-
         Set<Usuario> usuarioDestinoList = new HashSet<>();
-        usuarioDestinoList.add(usuarioDestino);
+        updateEntity.getUsuariosId().forEach(us -> {
+
+            Usuario usuario = this.usuarioService.findById(us)
+                    .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+            usuarioDestinoList.add(usuario);
+        });
 
         Set<Entrenamiento> entrenamientos = new HashSet<>();
 
@@ -77,7 +79,7 @@ public class RutinaService extends BaseService<Rutina, Long, RutinaRepository> {
 
         rutina.setUsuarios(usuarioDestinoList);
         rutina.setEntrenamientos(entrenamientos);
-        //rutina.setCreador(user);
+        rutina.setCreador(user);
         rutina.setNombre(updateEntity.getNombre());
         rutina.setDescripcion(updateEntity.getDescripcion());
         rutina.setDeleted(false);

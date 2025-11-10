@@ -11,6 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -47,19 +48,20 @@ public class Usuario implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String fullName;
 
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
     private String username;
 
     @JsonIgnore
     @Column(length = 255)
     private String password;
 
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
     private String documento;
 
     @Column(length = 255)
@@ -89,7 +91,7 @@ public class Usuario implements UserDetails {
     )
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @JsonManagedReference
+    @JsonBackReference
     private Set<Membresia> membresias;
 
     @ManyToMany(fetch = FetchType.LAZY)
