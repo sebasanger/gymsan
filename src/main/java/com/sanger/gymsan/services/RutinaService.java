@@ -116,4 +116,8 @@ public class RutinaService extends BaseService<Rutina, Long, RutinaRepository> {
 
     }
 
+    public Set<Rutina> obtenerRutinasPorUsuario(Long usuarioId) {
+        return this.repository.findByUsuarios_Id(usuarioId);
+    }
+
 }
