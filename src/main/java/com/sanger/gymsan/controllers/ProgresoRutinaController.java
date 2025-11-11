@@ -36,4 +36,9 @@ public class ProgresoRutinaController extends BaseController<ProgresoRutina, Lon
             @AuthenticationPrincipal Usuario user) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(PpogresoRutinaService.checkOut(checkOutDto, user));
     }
+
+    @PostMapping("/checkIn")
+    public ResponseEntity<?> checkIn(@AuthenticationPrincipal Usuario user) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(PpogresoRutinaService.checkIn(user));
+    }
 }

@@ -117,9 +117,9 @@ insert into membresias (id, nombre, precio, descripcion, cantidad_clases, delete
 -- MEMBRESIAS --
 
 -- MEMBRESIAS USUARIOS --
-insert into membresias_usuarios (id, membresias_id, usuarios_id, fecha_inscripcion, fecha_vencimiento, deleted) values 
-(1, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true),
-(2, 2, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, false);
+insert into membresias_usuarios (id, membresias_id, usuarios_id, fecha_inscripcion, fecha_vencimiento, deleted, enabled) values 
+(1, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false),
+(2, 2, 1, CURRENT_TIMESTAMP, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 30 DAY), false, true);
 -- MEMBRESIAS USUARIOS --
 
 -- PAGOS --
