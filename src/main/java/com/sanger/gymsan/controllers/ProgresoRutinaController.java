@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sanger.gymsan.dto.progresoRutina.CheckOutDto;
 import com.sanger.gymsan.dto.progresoRutina.CreateProgresoRutinaDto;
 import com.sanger.gymsan.models.ProgresoRutina;
 import com.sanger.gymsan.models.Usuario;
@@ -32,13 +31,13 @@ public class ProgresoRutinaController extends BaseController<ProgresoRutina, Lon
     }
 
     @PutMapping("/checkOut")
-    public ResponseEntity<?> checkOut(@Valid @RequestBody CheckOutDto checkOutDto,
+    public ResponseEntity<?> checkOut(@Valid @RequestBody String documento,
             @AuthenticationPrincipal Usuario user) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(PpogresoRutinaService.checkOut(checkOutDto, user));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(PpogresoRutinaService.checkOut(documento));
     }
 
     @PostMapping("/checkIn")
-    public ResponseEntity<?> checkIn(@AuthenticationPrincipal Usuario user) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(PpogresoRutinaService.checkIn(user));
+    public ResponseEntity<?> checkIn(@Valid @RequestBody String documento, @AuthenticationPrincipal Usuario user) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(PpogresoRutinaService.checkIn(documento));
     }
 }

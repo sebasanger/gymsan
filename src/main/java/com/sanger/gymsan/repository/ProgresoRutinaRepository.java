@@ -11,4 +11,6 @@ public interface ProgresoRutinaRepository extends JpaRepository<ProgresoRutina, 
     Optional<ProgresoRutina> findTopByUsuarioIdOrderByFechaDesc(Long usuarioId);
 
     Optional<ProgresoRutina> findTopByUsuarioIdOrderByCheckInDesc(Long usuarioId);
+
+    Optional<ProgresoRutina> findTopByUsuarioDocumentoAndCheckOutIsNullOrderByCheckInDesc(String documento);
 }

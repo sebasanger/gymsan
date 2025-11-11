@@ -2,12 +2,13 @@ package com.sanger.gymsan.services;
 
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.mail.MailAuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.sanger.gymsan.dto.auth.ChangeUserPassword;
@@ -20,9 +21,8 @@ import com.sanger.gymsan.exceptions.PasswordNotMismatch;
 import com.sanger.gymsan.exceptions.UserNotFoundException;
 import com.sanger.gymsan.models.Usuario;
 import com.sanger.gymsan.repository.UserEntityRepository;
-import org.springframework.beans.factory.annotation.Value;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -117,6 +117,11 @@ public class UsuarioService extends BaseService<Usuario, Long, UserEntityReposit
     public boolean checkEmailIsValid(CheckEmailIsValidDto checkEmailIsValidDto) {
         return this.repository.findByEmailAndIdNot(checkEmailIsValidDto.getEmail(), checkEmailIsValidDto.getId())
                 .isPresent();
+
+    }
+
+    public Usuario findByDocumento(String documento) {
+        return this.repository.findByDocumento(documento).orElseThrow(() -> new UserNotFoundException());
 
     }
 

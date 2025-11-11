@@ -7,18 +7,15 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sanger.gymsan.dto.progresoRutina.CheckOutDto;
 import com.sanger.gymsan.dto.progresoRutina.CreateProgresoRutinaDto;
 import com.sanger.gymsan.exceptions.MembresiaNoVigenteException;
 import com.sanger.gymsan.exceptions.MembresiaNotEncontradaException;
 import com.sanger.gymsan.exceptions.UltimoCheckInNoRegistradoException;
 import com.sanger.gymsan.models.Entrenamiento;
-import com.sanger.gymsan.models.Membresia;
 import com.sanger.gymsan.models.MembresiaUsuario;
 import com.sanger.gymsan.models.ProgresoRutina;
 import com.sanger.gymsan.models.Rutina;
 import com.sanger.gymsan.models.Usuario;
-import com.sanger.gymsan.repository.MembresiaRepository;
 import com.sanger.gymsan.repository.MembresiaUsuarioRepository;
 import com.sanger.gymsan.repository.ProgresoRutinaRepository;
 
@@ -60,8 +57,8 @@ public class ProgresoRutinaService extends BaseService<ProgresoRutina, Long, Pro
 
     }
 
-    public ProgresoRutina checkOut(CheckOutDto checkOutDto, Usuario user) {
-        ProgresoRutina progresoRutina = this.repository.findById(checkOutDto.getProgresoRutinaId())
+    public ProgresoRutina checkOut(String documento) {
+        ProgresoRutina progresoRutina = this.repository.findTopByUsuarioDocumentoAndCheckOutIsNullOrderByCheckInDesc(documento)
                 .orElseThrow(() -> new EntityNotFoundException("Progreso rutina no encontrado"));
 
         progresoRutina.setCheckOut(LocalDateTime.now());
@@ -70,23 +67,25 @@ public class ProgresoRutinaService extends BaseService<ProgresoRutina, Long, Pro
 
     }
 
-    public ProgresoRutina checkIn(Usuario user) {
+    public ProgresoRutina checkIn(String documento) {
         ProgresoRutina progresoRutina = new ProgresoRutina();
 
-        MembresiaUsuario membresiaActual = this.membresiaUsuarioRepository.findByUsuarioIdAndEnabledTrue(user.getId())
+        Usuario usuario = this.usuarioService.findByDocumento(documento);
+
+        MembresiaUsuario membresiaActual = this.membresiaUsuarioRepository.findByUsuarioIdAndEnabledTrue(usuario.getId())
                 .orElseThrow(() -> new MembresiaNotEncontradaException());
 
         if (membresiaActual.getFechaVencimiento().isBefore(LocalDateTime.now())) {
             throw new MembresiaNoVigenteException();
         }
 
-        Optional<ProgresoRutina> ultimoProgresoRutina = this.repository.findTopByUsuarioIdOrderByCheckInDesc(user.getId());
+        Optional<ProgresoRutina> ultimoProgresoRutina = this.repository.findTopByUsuarioIdOrderByCheckInDesc(usuario.getId());
 
         if (ultimoProgresoRutina.isPresent() && ultimoProgresoRutina.get().getCheckOut() == null) {
             throw new UltimoCheckInNoRegistradoException();
         }
 
-        progresoRutina.setUsuario(user);
+        progresoRutina.setUsuario(usuario);
         progresoRutina.setCheckIn(LocalDateTime.now());
         progresoRutina.setFecha(LocalDate.now());
 
