@@ -43,9 +43,9 @@ public class Pago {
     @ManyToMany
     @JoinTable(
             name = "pagos_membresias",
-            joinColumns = @JoinColumn(name = "membresias_usuarios_id"),
-            inverseJoinColumns = @JoinColumn(name = "pagos_id")
+            joinColumns = @JoinColumn(name = "pagos_id"),
+            inverseJoinColumns = @JoinColumn(name = "membresias_usuarios_id")
     )
-    private Set<MembresiaUsuario> membresias;
+    private Set<MembresiaUsuario> membresiasUsuarios;
 
 }

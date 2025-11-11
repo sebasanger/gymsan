@@ -3,15 +3,22 @@ package com.sanger.gymsan.models;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,10 +39,13 @@ public class MembresiaUsuario {
 
     @ManyToOne
     @JoinColumn(name = "usuarios_id")
+    @JsonManagedReference
+    @JsonIncludeProperties({"id", "fullName", "documento"})
     private Usuario usuario;
 
     @ManyToOne
     @JoinColumn(name = "membresias_id")
+    @JsonManagedReference
     private Membresia membresia;
 
     @Column(name = "fecha_inscripcion")
@@ -48,12 +58,8 @@ public class MembresiaUsuario {
 
     private Boolean deleted;
 
-    @ManyToMany
-    @JoinTable(
-            name = "pagos_membresias",
-            joinColumns = @JoinColumn(name = "pagos_id"),
-            inverseJoinColumns = @JoinColumn(name = "membresias_usuarios_id")
-    )
+    @ManyToMany(mappedBy = "membresiasUsuarios")
+    @JsonIgnore
     private Set<Pago> pagos;
 
 }

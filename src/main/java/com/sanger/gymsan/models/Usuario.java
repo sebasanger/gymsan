@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -25,6 +26,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -83,16 +85,9 @@ public class Usuario implements UserDetails {
     @JsonManagedReference
     private Set<Rol> roles;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "membresias_usuarios",
-            joinColumns = @JoinColumn(name = "usuarios_id"),
-            inverseJoinColumns = @JoinColumn(name = "membresias_id")
-    )
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonBackReference
-    private Set<Membresia> membresias;
+    private Set<MembresiaUsuario> membresiasUsuarios;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
