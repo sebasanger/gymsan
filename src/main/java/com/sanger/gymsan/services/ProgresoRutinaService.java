@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sanger.gymsan.dto.progresoEjercicio.CreateProgresoEjercicioDto;
 import com.sanger.gymsan.dto.progresoRutina.CreateProgresoRutinaDto;
 import com.sanger.gymsan.exceptions.MembresiaNoVigenteException;
 import com.sanger.gymsan.exceptions.MembresiaNotEncontradaException;
@@ -88,6 +89,23 @@ public class ProgresoRutinaService extends BaseService<ProgresoRutina, Long, Pro
         progresoRutina.setUsuario(usuario);
         progresoRutina.setCheckIn(LocalDateTime.now());
         progresoRutina.setFecha(LocalDate.now());
+
+        return this.repository.save(progresoRutina);
+
+    }
+
+    public ProgresoRutina setRutinaAndEntrenamientoInCurrentProgreso(CreateProgresoRutinaDto createProgresoEjercicioDto, Usuario user) {
+        ProgresoRutina progresoRutina = this.repository.findTopByUsuarioIdAndCheckOutIsNullOrderByCheckInDesc(user.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Progreso rutina no encontrado"));
+
+        Rutina rutina = this.rutinaService.findById(createProgresoEjercicioDto.getRutinaId())
+                .orElseThrow(() -> new EntityNotFoundException("Rutina no encontrada"));
+
+        Entrenamiento entrenamiento = this.entrenamientoService.findById(createProgresoEjercicioDto.getEntrenamientoId())
+                .orElseThrow(() -> new EntityNotFoundException("Entrenamiento no encontrado"));
+
+        progresoRutina.setRutina(rutina);
+        progresoRutina.setEntrenamiento(entrenamiento);
 
         return this.repository.save(progresoRutina);
 

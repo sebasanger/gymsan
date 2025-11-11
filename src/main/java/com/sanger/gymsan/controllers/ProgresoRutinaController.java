@@ -40,4 +40,10 @@ public class ProgresoRutinaController extends BaseController<ProgresoRutina, Lon
     public ResponseEntity<?> checkIn(@Valid @RequestBody String documento, @AuthenticationPrincipal Usuario user) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(PpogresoRutinaService.checkIn(documento));
     }
+
+    @PutMapping("/guardarRutinaEntrenamiento")
+    public ResponseEntity<?> checkOut(@Valid @RequestBody CreateProgresoRutinaDto createProgresoRutinaDto,
+            @AuthenticationPrincipal Usuario user) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(PpogresoRutinaService.setRutinaAndEntrenamientoInCurrentProgreso(createProgresoRutinaDto, user));
+    }
 }
