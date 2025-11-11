@@ -37,7 +37,7 @@ insert into rutinas (id, nombre, descripcion, deleted, creador) values (1,'Rutin
 
 
 -- RUTINAS USUARIOS --
-insert into rutinas_usuarios (usuarios_id, rutinas_id, deleted, fecha_inicio, fecha_fin) values (1,1, false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+insert into rutinas_usuarios (usuarios_id, rutinas_id) values (1,1);
 
 -- RUTINAS USUARIOS --
 

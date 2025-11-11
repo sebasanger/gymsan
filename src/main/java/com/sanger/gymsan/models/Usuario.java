@@ -87,16 +87,15 @@ public class Usuario implements UserDetails {
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonBackReference
-    private Set<MembresiaUsuario> membresiasUsuarios;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "rutinas_usuarios",
-            joinColumns = @JoinColumn(name = "usuarios_id"),
-            inverseJoinColumns = @JoinColumn(name = "rutinas_id"))
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @JsonManagedReference
+    private Set<MembresiaUsuario> membresiasUsuarios;
+
+    @ManyToMany(mappedBy = "usuarios", fetch = FetchType.LAZY)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JsonBackReference
+    @JsonIgnore
     private Set<Rutina> rutinas;
 
     @CreatedDate
