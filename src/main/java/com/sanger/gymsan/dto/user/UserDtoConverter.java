@@ -29,7 +29,7 @@ public class UserDtoConverter {
     }
 
     public GetUserDetailsDto convertUserEntityToGetUserDetailsDto(Usuario user) {
-        return GetUserDetailsDto.builder().id(user.getId())
+        return GetUserDetailsDto.builder().id(user.getId()).fullName(user.getFullName())
                 .email(user.getEmail()).enabled(user.isEnabled()).deleted(user.getDeleted()).documento(user.getDocumento())
                 .createdAt(user.getCreatedAt()).lastPasswordChangeAt(user.getLastPasswordChangeAt())
                 .roles(user.getRoles().stream().map(Rol::getRol).collect(Collectors.toSet())).build();
