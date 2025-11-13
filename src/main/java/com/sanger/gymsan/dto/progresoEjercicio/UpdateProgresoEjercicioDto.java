@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.sanger.gymsan.models.Serie;
 
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +17,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CreateProgresoEjercicioDto {
+public class UpdateProgresoEjercicioDto {
+
+    @Id
+    private Long id;
 
     @NotNull
     private Long progresoRutinaId;
