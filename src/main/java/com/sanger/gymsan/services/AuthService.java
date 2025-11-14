@@ -51,6 +51,7 @@ public class AuthService {
         String token = jwtProvider.generateTokenWithEmail(user);
         return RefreshTokenResponse.builder().authenticationToken(token)
                 .refreshToken(refreshTokenRequest.getRefreshToken())
+                .user(userDtoConverter.convertUserEntityToGetUserDetailsDto(user))
                 .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtDurationToken())).build();
     }
 

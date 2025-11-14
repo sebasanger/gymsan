@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 
+import com.sanger.gymsan.dto.user.GetUserDetailsDto;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,5 +18,6 @@ public class RefreshTokenResponse {
     private String authenticationToken;
     private String refreshToken;
     private Instant expiresAt;
+    private GetUserDetailsDto user;
 
 }
