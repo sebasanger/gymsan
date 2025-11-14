@@ -109,4 +109,10 @@ public class ProgresoRutinaService extends BaseService<ProgresoRutina, Long, Pro
         return this.repository.save(progresoRutina);
 
     }
+
+    public ProgresoRutina getLastActiveRoutineUser(Usuario user) {
+        return this.repository.findTopByUsuarioIdAndCheckOutIsNullOrderByCheckInDesc(user.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Progreso rutina no encontrado"));
+
+    }
 }
