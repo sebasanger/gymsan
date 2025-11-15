@@ -1,6 +1,7 @@
 package com.sanger.gymsan.services;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
@@ -26,86 +27,103 @@ import lombok.AllArgsConstructor;
 @Transactional
 public class ProgresoEjercicioService extends BaseService<ProgresoEjercicio, Long, ProgresoEjercicioRepository> {
 
-    private final ProgresoRutinaService progresoRutinaService;
+        private final ProgresoRutinaService progresoRutinaService;
 
-    private final EjercicioService ejercicioService;
+        private final EjercicioService ejercicioService;
 
-    private final SerieRepository serieRepository;
+        private final SerieRepository serieRepository;
 
-    public ProgresoEjercicio save(CreateProgresoEjercicioDto newEntity, Usuario user) {
-        ProgresoEjercicio progresoEjercicio = new ProgresoEjercicio();
+        public ProgresoEjercicio save(CreateProgresoEjercicioDto newEntity, Usuario user) {
 
-        Ejercicio ejercicio = this.ejercicioService.findById(newEntity.getEjercicioId())
-                .orElseThrow(() -> new EntityNotFoundException("Ejercicio no encontrado"));
+                Ejercicio ejercicio = this.ejercicioService.findById(newEntity.getEjercicioId())
+                                .orElseThrow(() -> new EntityNotFoundException("Ejercicio no encontrado"));
 
-        ProgresoRutina progresoRutina = this.progresoRutinaService.findById(newEntity.getProgresoRutinaId())
-                .orElseThrow(() -> new EntityNotFoundException("Progreso rutina no encontrada"));
+                ProgresoRutina progresoRutina = this.progresoRutinaService.findById(newEntity.getProgresoRutinaId())
+                                .orElseThrow(() -> new EntityNotFoundException("Progreso rutina no encontrada"));
 
-        Set<Serie> series = new HashSet<>();
+                Optional<ProgresoEjercicio> existenteOpt = repository.findByProgresoRutinaIdAndEjercicioId(
+                                progresoRutina.getId(),
+                                ejercicio.getId());
 
-        newEntity.getSeries().forEach(serie -> {
-            series.add(this.serieRepository.save(serie));
-        });
+                ProgresoEjercicio progresoEjercicio;
 
-        progresoEjercicio.setEjercicio(ejercicio);
-        progresoEjercicio.setProgresoRutina(progresoRutina);
-        progresoEjercicio.setSeries(series);
+                if (existenteOpt.isPresent()) {
+                        progresoEjercicio = existenteOpt.get();
+                        progresoEjercicio.getSeries().clear();
 
-        return this.repository.save(progresoEjercicio);
+                } else {
+                        progresoEjercicio = new ProgresoEjercicio();
+                        progresoEjercicio.setEjercicio(ejercicio);
+                        progresoEjercicio.setProgresoRutina(progresoRutina);
+                }
 
-    }
+                Set<Serie> series = new HashSet<>();
 
-    public ProgresoEjercicio agregarSerie(AddSerieDto addSerieDto, Usuario user) {
-        ProgresoEjercicio progresoEjercicio = this.repository.findById(addSerieDto.getProgresoEjercicioId())
-                .orElseThrow(() -> new EntityNotFoundException("Progreso ejercicio no encontrado"));
+                newEntity.getSeries().forEach(serie -> {
+                        series.add(this.serieRepository.save(serie));
+                });
 
-        Serie newSerie = new Serie();
-        newSerie.setPeso(addSerieDto.getPeso());
-        newSerie.setRepeticiones(addSerieDto.getRepeticiones());
+                progresoEjercicio.setEjercicio(ejercicio);
+                progresoEjercicio.setProgresoRutina(progresoRutina);
+                progresoEjercicio.setSeries(series);
+                progresoEjercicio.setCantidadSeries(series.size());
 
-        Serie serie = this.serieRepository.save(newSerie);
+                return this.repository.save(progresoEjercicio);
 
-        progresoEjercicio.getSeries().add(serie);
+        }
 
-        return this.repository.save(progresoEjercicio);
-    }
+        public ProgresoEjercicio agregarSerie(AddSerieDto addSerieDto, Usuario user) {
+                ProgresoEjercicio progresoEjercicio = this.repository.findById(addSerieDto.getProgresoEjercicioId())
+                                .orElseThrow(() -> new EntityNotFoundException("Progreso ejercicio no encontrado"));
 
-    public ProgresoEjercicio eliminarSerie(RemoveSerieDto addRemoveSerieDto, Usuario user) {
-        ProgresoEjercicio progresoEjercicio = this.repository.findById(addRemoveSerieDto.getProgresoEjercicioId())
-                .orElseThrow(() -> new EntityNotFoundException("Progreso ejercicio no encontrado"));
+                Serie newSerie = new Serie();
+                newSerie.setPeso(addSerieDto.getPeso());
+                newSerie.setRepeticiones(addSerieDto.getRepeticiones());
 
-        Serie serie = this.serieRepository.findById(addRemoveSerieDto.getSerieId())
-                .orElseThrow(() -> new EntityNotFoundException("Serie no encontrada"));
+                Serie serie = this.serieRepository.save(newSerie);
 
-        progresoEjercicio.getSeries().remove(serie);
+                progresoEjercicio.getSeries().add(serie);
 
-        this.serieRepository.delete(serie);
+                return this.repository.save(progresoEjercicio);
+        }
 
-        return this.repository.save(progresoEjercicio);
-    }
+        public ProgresoEjercicio eliminarSerie(RemoveSerieDto addRemoveSerieDto, Usuario user) {
+                ProgresoEjercicio progresoEjercicio = this.repository
+                                .findById(addRemoveSerieDto.getProgresoEjercicioId())
+                                .orElseThrow(() -> new EntityNotFoundException("Progreso ejercicio no encontrado"));
 
-    public ProgresoEjercicio update(UpdateProgresoEjercicioDto updateEntity, Usuario user) {
-        ProgresoEjercicio progresoEjercicio = this.repository.findById(updateEntity.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Ejercicio no encontrado"));
+                Serie serie = this.serieRepository.findById(addRemoveSerieDto.getSerieId())
+                                .orElseThrow(() -> new EntityNotFoundException("Serie no encontrada"));
 
-        Ejercicio ejercicio = this.ejercicioService.findById(updateEntity.getEjercicioId())
-                .orElseThrow(() -> new EntityNotFoundException("Ejercicio no encontrado"));
+                progresoEjercicio.getSeries().remove(serie);
 
-        ProgresoRutina progresoRutina = this.progresoRutinaService.findById(updateEntity.getProgresoRutinaId())
-                .orElseThrow(() -> new EntityNotFoundException("Progreso rutina no encontrada"));
+                this.serieRepository.delete(serie);
 
-        Set<Serie> series = new HashSet<>();
+                return this.repository.save(progresoEjercicio);
+        }
 
-        updateEntity.getSeries().forEach(serie -> {
-            series.add(this.serieRepository.save(serie));
-        });
+        public ProgresoEjercicio update(UpdateProgresoEjercicioDto updateEntity, Usuario user) {
+                ProgresoEjercicio progresoEjercicio = this.repository.findById(updateEntity.getId())
+                                .orElseThrow(() -> new EntityNotFoundException("Ejercicio no encontrado"));
 
-        progresoEjercicio.setEjercicio(ejercicio);
-        progresoEjercicio.setProgresoRutina(progresoRutina);
-        progresoEjercicio.setSeries(series);
+                Ejercicio ejercicio = this.ejercicioService.findById(updateEntity.getEjercicioId())
+                                .orElseThrow(() -> new EntityNotFoundException("Ejercicio no encontrado"));
 
-        return this.repository.save(progresoEjercicio);
+                ProgresoRutina progresoRutina = this.progresoRutinaService.findById(updateEntity.getProgresoRutinaId())
+                                .orElseThrow(() -> new EntityNotFoundException("Progreso rutina no encontrada"));
 
-    }
+                Set<Serie> series = new HashSet<>();
+
+                updateEntity.getSeries().forEach(serie -> {
+                        series.add(this.serieRepository.save(serie));
+                });
+
+                progresoEjercicio.setEjercicio(ejercicio);
+                progresoEjercicio.setProgresoRutina(progresoRutina);
+                progresoEjercicio.setSeries(series);
+
+                return this.repository.save(progresoEjercicio);
+
+        }
 
 }
