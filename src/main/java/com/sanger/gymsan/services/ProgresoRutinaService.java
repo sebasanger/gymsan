@@ -2,17 +2,23 @@ package com.sanger.gymsan.services;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sanger.gymsan.dto.progresoEjercicio.EntrenamientoConProgresoDto;
+import com.sanger.gymsan.dto.progresoEjercicio.RutinaActivaDto;
 import com.sanger.gymsan.dto.progresoRutina.CreateProgresoRutinaDto;
 import com.sanger.gymsan.exceptions.MembresiaNoVigenteException;
 import com.sanger.gymsan.exceptions.MembresiaNotEncontradaException;
 import com.sanger.gymsan.exceptions.UltimoCheckInNoRegistradoException;
+import com.sanger.gymsan.models.Ejercicio;
 import com.sanger.gymsan.models.Entrenamiento;
 import com.sanger.gymsan.models.MembresiaUsuario;
+import com.sanger.gymsan.models.ProgresoEjercicio;
 import com.sanger.gymsan.models.ProgresoRutina;
 import com.sanger.gymsan.models.Rutina;
 import com.sanger.gymsan.models.Usuario;
@@ -27,92 +33,127 @@ import lombok.AllArgsConstructor;
 @Transactional
 public class ProgresoRutinaService extends BaseService<ProgresoRutina, Long, ProgresoRutinaRepository> {
 
-    private final UsuarioService usuarioService;
+        private final UsuarioService usuarioService;
 
-    private final RutinaService rutinaService;
+        private final RutinaService rutinaService;
 
-    private final EntrenamientoService entrenamientoService;
+        private final EntrenamientoService entrenamientoService;
 
-    private final MembresiaUsuarioRepository membresiaUsuarioRepository;
+        private final MembresiaUsuarioRepository membresiaUsuarioRepository;
 
-    public ProgresoRutina save(CreateProgresoRutinaDto newEntity, Usuario user) {
-        ProgresoRutina progresoRutina = new ProgresoRutina();
+        public ProgresoRutina save(CreateProgresoRutinaDto newEntity, Usuario user) {
+                ProgresoRutina progresoRutina = new ProgresoRutina();
 
-        Usuario usuarioActual = this.usuarioService.findById(user.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+                Usuario usuarioActual = this.usuarioService.findById(user.getId())
+                                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
 
-        Rutina rutina = this.rutinaService.findById(newEntity.getRutinaId())
-                .orElseThrow(() -> new EntityNotFoundException("Rutina no encontrada"));
+                Rutina rutina = this.rutinaService.findById(newEntity.getRutinaId())
+                                .orElseThrow(() -> new EntityNotFoundException("Rutina no encontrada"));
 
-        Entrenamiento entrenamiento = this.entrenamientoService.findById(newEntity.getEntrenamientoId())
-                .orElseThrow(() -> new EntityNotFoundException("Entrenamiento no encontrado"));
+                Entrenamiento entrenamiento = this.entrenamientoService.findById(newEntity.getEntrenamientoId())
+                                .orElseThrow(() -> new EntityNotFoundException("Entrenamiento no encontrado"));
 
-        progresoRutina.setUsuario(usuarioActual);
-        progresoRutina.setEntrenamiento(entrenamiento);
-        progresoRutina.setRutina(rutina);
-        progresoRutina.setCheckIn(LocalDateTime.now());
-        progresoRutina.setFecha(LocalDate.now());
+                progresoRutina.setUsuario(usuarioActual);
+                progresoRutina.setEntrenamiento(entrenamiento);
+                progresoRutina.setRutina(rutina);
+                progresoRutina.setCheckIn(LocalDateTime.now());
+                progresoRutina.setFecha(LocalDate.now());
 
-        return this.repository.save(progresoRutina);
+                return this.repository.save(progresoRutina);
 
-    }
-
-    public ProgresoRutina checkOut(String documento) {
-        ProgresoRutina progresoRutina = this.repository.findTopByUsuarioDocumentoAndCheckOutIsNullOrderByCheckInDesc(documento)
-                .orElseThrow(() -> new EntityNotFoundException("Progreso rutina no encontrado"));
-
-        progresoRutina.setCheckOut(LocalDateTime.now());
-
-        return this.repository.save(progresoRutina);
-
-    }
-
-    public ProgresoRutina checkIn(String documento) {
-        ProgresoRutina progresoRutina = new ProgresoRutina();
-
-        Usuario usuario = this.usuarioService.findByDocumento(documento);
-
-        MembresiaUsuario membresiaActual = this.membresiaUsuarioRepository.findByUsuarioIdAndEnabledTrue(usuario.getId())
-                .orElseThrow(() -> new MembresiaNotEncontradaException());
-
-        if (membresiaActual.getFechaVencimiento().isBefore(LocalDateTime.now())) {
-            throw new MembresiaNoVigenteException();
         }
 
-        Optional<ProgresoRutina> ultimoProgresoRutina = this.repository.findTopByUsuarioIdOrderByCheckInDesc(usuario.getId());
+        public ProgresoRutina checkOut(String documento) {
+                ProgresoRutina progresoRutina = this.repository
+                                .findTopByUsuarioDocumentoAndCheckOutIsNullOrderByCheckInDesc(documento)
+                                .orElseThrow(() -> new EntityNotFoundException("Progreso rutina no encontrado"));
 
-        if (ultimoProgresoRutina.isPresent() && ultimoProgresoRutina.get().getCheckOut() == null) {
-            throw new UltimoCheckInNoRegistradoException();
+                progresoRutina.setCheckOut(LocalDateTime.now());
+
+                return this.repository.save(progresoRutina);
+
         }
 
-        progresoRutina.setUsuario(usuario);
-        progresoRutina.setCheckIn(LocalDateTime.now());
-        progresoRutina.setFecha(LocalDate.now());
+        public ProgresoRutina checkIn(String documento) {
+                ProgresoRutina progresoRutina = new ProgresoRutina();
 
-        return this.repository.save(progresoRutina);
+                Usuario usuario = this.usuarioService.findByDocumento(documento);
 
-    }
+                MembresiaUsuario membresiaActual = this.membresiaUsuarioRepository
+                                .findByUsuarioIdAndEnabledTrue(usuario.getId())
+                                .orElseThrow(() -> new MembresiaNotEncontradaException());
 
-    public ProgresoRutina setRutinaAndEntrenamientoInCurrentProgreso(CreateProgresoRutinaDto createProgresoEjercicioDto, Usuario user) {
-        ProgresoRutina progresoRutina = this.repository.findTopByUsuarioIdAndCheckOutIsNullOrderByCheckInDesc(user.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Progreso rutina no encontrado"));
+                if (membresiaActual.getFechaVencimiento().isBefore(LocalDateTime.now())) {
+                        throw new MembresiaNoVigenteException();
+                }
 
-        Rutina rutina = this.rutinaService.findById(createProgresoEjercicioDto.getRutinaId())
-                .orElseThrow(() -> new EntityNotFoundException("Rutina no encontrada"));
+                Optional<ProgresoRutina> ultimoProgresoRutina = this.repository
+                                .findTopByUsuarioIdOrderByCheckInDesc(usuario.getId());
 
-        Entrenamiento entrenamiento = this.entrenamientoService.findById(createProgresoEjercicioDto.getEntrenamientoId())
-                .orElseThrow(() -> new EntityNotFoundException("Entrenamiento no encontrado"));
+                if (ultimoProgresoRutina.isPresent() && ultimoProgresoRutina.get().getCheckOut() == null) {
+                        throw new UltimoCheckInNoRegistradoException();
+                }
 
-        progresoRutina.setRutina(rutina);
-        progresoRutina.setEntrenamiento(entrenamiento);
+                progresoRutina.setUsuario(usuario);
+                progresoRutina.setCheckIn(LocalDateTime.now());
+                progresoRutina.setFecha(LocalDate.now());
 
-        return this.repository.save(progresoRutina);
+                return this.repository.save(progresoRutina);
 
-    }
+        }
 
-    public ProgresoRutina getLastActiveRoutineUser(Usuario user) {
-        return this.repository.findTopByUsuarioIdAndCheckOutIsNullOrderByCheckInDesc(user.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Progreso rutina no encontrado"));
+        public ProgresoRutina setRutinaAndEntrenamientoInCurrentProgreso(
+                        CreateProgresoRutinaDto createProgresoEjercicioDto, Usuario user) {
+                ProgresoRutina progresoRutina = this.repository
+                                .findTopByUsuarioIdAndCheckOutIsNullOrderByCheckInDesc(user.getId())
+                                .orElseThrow(() -> new EntityNotFoundException("Progreso rutina no encontrado"));
 
-    }
+                Rutina rutina = this.rutinaService.findById(createProgresoEjercicioDto.getRutinaId())
+                                .orElseThrow(() -> new EntityNotFoundException("Rutina no encontrada"));
+
+                Entrenamiento entrenamiento = this.entrenamientoService
+                                .findById(createProgresoEjercicioDto.getEntrenamientoId())
+                                .orElseThrow(() -> new EntityNotFoundException("Entrenamiento no encontrado"));
+
+                progresoRutina.setRutina(rutina);
+                progresoRutina.setEntrenamiento(entrenamiento);
+
+                return this.repository.save(progresoRutina);
+
+        }
+
+        public RutinaActivaDto getLastActiveRoutineUser(Usuario user) {
+
+                // 1. Obtener progreso de rutina sin checkout
+                ProgresoRutina progresoRutina = this.repository
+                                .findTopByUsuarioIdAndCheckOutIsNullOrderByCheckInDesc(user.getId())
+                                .orElseThrow(() -> new EntityNotFoundException("Progreso rutina no encontrado"));
+
+                // 2. Obtener rutina y entrenamientos
+                Rutina rutina = progresoRutina.getRutina();
+                Set<Entrenamiento> entrenamientos = rutina.getEntrenamientos();
+
+                // 3. Mapear entrenamiento + progreso ejercicio
+                List<EntrenamientoConProgresoDto> resultado = entrenamientos.stream().map(entrenamiento -> {
+
+                        ProgresoEjercicio progresoEjercicio = progresoRutina.getProgresoEjercicio()
+                                        .stream()
+                                        .filter(progreso -> progreso.getEjercicio().getId()
+                                                        .equals(entrenamiento.getId()))
+                                        .findFirst()
+                                        .orElse(null);
+
+                        return new EntrenamientoConProgresoDto(entrenamiento, progresoEjercicio);
+
+                }).toList();
+
+                // 4. Retornar DTO final
+                return RutinaActivaDto.builder()
+                                .rutina(rutina)
+                                .entrenamientos(resultado)
+                                .checkIn(progresoRutina.getCheckIn())
+                                .checkOut(progresoRutina.getCheckOut())
+                                .build();
+        }
+
 }
