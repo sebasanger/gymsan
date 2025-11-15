@@ -2,20 +2,20 @@ package com.sanger.gymsan.services;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sanger.gymsan.dto.progresoEjercicio.EjercicioEntrenamientoConProgresoDto;
 import com.sanger.gymsan.dto.progresoEjercicio.EntrenamientoConProgresoDto;
 import com.sanger.gymsan.dto.progresoEjercicio.RutinaActivaDto;
 import com.sanger.gymsan.dto.progresoRutina.CreateProgresoRutinaDto;
 import com.sanger.gymsan.exceptions.MembresiaNoVigenteException;
 import com.sanger.gymsan.exceptions.MembresiaNotEncontradaException;
 import com.sanger.gymsan.exceptions.UltimoCheckInNoRegistradoException;
-import com.sanger.gymsan.models.Ejercicio;
 import com.sanger.gymsan.models.Entrenamiento;
 import com.sanger.gymsan.models.MembresiaUsuario;
 import com.sanger.gymsan.models.ProgresoEjercicio;
@@ -124,33 +124,55 @@ public class ProgresoRutinaService extends BaseService<ProgresoRutina, Long, Pro
 
         public RutinaActivaDto getLastActiveRoutineUser(Usuario user) {
 
-                // 1. Obtener progreso de rutina sin checkout
-                ProgresoRutina progresoRutina = this.repository
+                // 1. Obtener progreso de rutina activo
+                ProgresoRutina progresoRutina = repository
                                 .findTopByUsuarioIdAndCheckOutIsNullOrderByCheckInDesc(user.getId())
                                 .orElseThrow(() -> new EntityNotFoundException("Progreso rutina no encontrado"));
 
-                // 2. Obtener rutina y entrenamientos
-                Rutina rutina = progresoRutina.getRutina();
-                Set<Entrenamiento> entrenamientos = rutina.getEntrenamientos();
+                // 2. Obtener entrenamiento seleccionado
+                Entrenamiento entrenamiento = entrenamientoService.findById(
+                                progresoRutina.getEntrenamiento().getId())
+                                .orElseThrow(() -> new EntityNotFoundException("Entrenamiento no encontrado"));
 
-                // 3. Mapear entrenamiento + progreso ejercicio
-                List<EntrenamientoConProgresoDto> resultado = entrenamientos.stream().map(entrenamiento -> {
+                // 3. Mapear los ejercicios del entrenamiento + su progreso
+                Set<EjercicioEntrenamientoConProgresoDto> ejerciciosDto = entrenamiento.getEjerciciosEntrenamientos()
+                                .stream()
+                                .map(ee -> {
 
-                        ProgresoEjercicio progresoEjercicio = progresoRutina.getProgresoEjercicio()
-                                        .stream()
-                                        .filter(progreso -> progreso.getEjercicio().getId()
-                                                        .equals(entrenamiento.getId()))
-                                        .findFirst()
-                                        .orElse(null);
+                                        // Buscar progreso por este Ejercicio (NO por el entrenamiento)
+                                        ProgresoEjercicio progreso = progresoRutina.getProgresoEjercicio()
+                                                        .stream()
+                                                        .filter(p -> p.getEjercicio().getId()
+                                                                        .equals(ee.getEjercicio().getId()))
+                                                        .findFirst()
+                                                        .orElse(null);
 
-                        return new EntrenamientoConProgresoDto(entrenamiento, progresoEjercicio);
+                                        return EjercicioEntrenamientoConProgresoDto.builder()
+                                                        .id(ee.getId())
+                                                        .entrenamiento(entrenamiento)
+                                                        .ejercicio(ee.getEjercicio())
+                                                        .series(ee.getSeries())
+                                                        .repeticiones(ee.getRepeticiones())
+                                                        .peso(ee.getPeso())
+                                                        .progreso(progreso)
+                                                        .build();
+                                })
+                                .collect(Collectors.toSet());
 
-                }).toList();
+                // 4. DTO del entrenamiento completo con sus progresos
+                EntrenamientoConProgresoDto entrenamientoDto = EntrenamientoConProgresoDto.builder()
+                                .id(entrenamiento.getId())
+                                .nombre(entrenamiento.getNombre())
+                                .deleted(entrenamiento.getDeleted())
+                                .categoria(entrenamiento.getCategoria())
+                                .ejercicios(ejerciciosDto)
+                                .build();
 
-                // 4. Retornar DTO final
+                // 5. Retornar respuesta final
                 return RutinaActivaDto.builder()
-                                .rutina(rutina)
-                                .entrenamientos(resultado)
+                                .rutina(progresoRutina.getRutina())
+                                .entrenamientoSeleccionado(entrenamientoDto)
+                                .fecha(progresoRutina.getFecha())
                                 .checkIn(progresoRutina.getCheckIn())
                                 .checkOut(progresoRutina.getCheckOut())
                                 .build();

@@ -2,7 +2,6 @@ package com.sanger.gymsan.dto.progresoEjercicio;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import com.sanger.gymsan.models.Rutina;
 
@@ -17,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class RutinaActivaDto {
     private Rutina rutina;
-    private List<EntrenamientoConProgresoDto> entrenamientos;
+    private EntrenamientoConProgresoDto entrenamientoSeleccionado;
     private LocalDate fecha;
     private LocalDateTime checkIn;
     private LocalDateTime checkOut;

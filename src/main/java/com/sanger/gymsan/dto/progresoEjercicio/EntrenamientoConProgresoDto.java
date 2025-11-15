@@ -1,7 +1,8 @@
 package com.sanger.gymsan.dto.progresoEjercicio;
 
-import com.sanger.gymsan.models.Entrenamiento;
-import com.sanger.gymsan.models.ProgresoEjercicio;
+import java.util.Set;
+
+import com.sanger.gymsan.models.Categoria;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +15,15 @@ import lombok.NoArgsConstructor;
 @Builder
 public class EntrenamientoConProgresoDto {
 
-    private Entrenamiento entrenamiento;
-    private ProgresoEjercicio progreso;
+    private Long id;
 
+    private String nombre;
+
+    private String descripcion;
+
+    private Boolean deleted;
+
+    private Categoria categoria;
+
+    private Set<EjercicioEntrenamientoConProgresoDto> ejercicios;
 }
