@@ -2,6 +2,7 @@ package com.sanger.gymsan.services;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -16,6 +17,7 @@ import com.sanger.gymsan.dto.progresoRutina.CreateProgresoRutinaDto;
 import com.sanger.gymsan.exceptions.MembresiaNoVigenteException;
 import com.sanger.gymsan.exceptions.MembresiaNotEncontradaException;
 import com.sanger.gymsan.exceptions.UltimoCheckInNoRegistradoException;
+import com.sanger.gymsan.models.EjercicioEntrenamiento;
 import com.sanger.gymsan.models.Entrenamiento;
 import com.sanger.gymsan.models.MembresiaUsuario;
 import com.sanger.gymsan.models.ProgresoEjercicio;
@@ -124,22 +126,30 @@ public class ProgresoRutinaService extends BaseService<ProgresoRutina, Long, Pro
 
         public RutinaActivaDto getLastActiveRoutineUser(Usuario user) {
 
-                // 1. Obtener progreso de rutina activo
                 ProgresoRutina progresoRutina = repository
                                 .findTopByUsuarioIdAndCheckOutIsNullOrderByCheckInDesc(user.getId())
                                 .orElseThrow(() -> new EntityNotFoundException("Progreso rutina no encontrado"));
 
-                // 2. Obtener entrenamiento seleccionado
+                if (progresoRutina.getEntrenamiento() == null) {
+                        return RutinaActivaDto.builder()
+                                        .id(progresoRutina.getId())
+                                        .fecha(progresoRutina.getFecha())
+                                        .checkIn(progresoRutina.getCheckIn())
+                                        .build();
+                }
+
                 Entrenamiento entrenamiento = entrenamientoService.findById(
                                 progresoRutina.getEntrenamiento().getId())
                                 .orElseThrow(() -> new EntityNotFoundException("Entrenamiento no encontrado"));
 
-                // 3. Mapear los ejercicios del entrenamiento + su progreso
-                Set<EjercicioEntrenamientoConProgresoDto> ejerciciosDto = entrenamiento.getEjerciciosEntrenamientos()
-                                .stream()
+                Set<EjercicioEntrenamiento> ejercicios = Optional
+                                .ofNullable(entrenamiento.getEjerciciosEntrenamientos())
+                                .orElse(Collections.emptySet());
+
+                // mapeo de ejercicio de la rutina con sus progresos
+                Set<EjercicioEntrenamientoConProgresoDto> ejerciciosDto = ejercicios.stream()
                                 .map(ee -> {
 
-                                        // Buscar progreso por este Ejercicio (NO por el entrenamiento)
                                         ProgresoEjercicio progreso = progresoRutina.getProgresoEjercicio()
                                                         .stream()
                                                         .filter(p -> p.getEjercicio().getId()
