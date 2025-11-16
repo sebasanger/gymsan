@@ -30,14 +30,15 @@ insert into roles_usuarios (usuarios_id, roles_id) values (1,5);
 
 
 -- RUTINAS --
-insert into rutinas (id, nombre, descripcion, deleted, creador) values (1,'Rutina para seba Avanzada', "Rutina para pierna, pecho, espalda y biceps avanzada", false, 1); 
+insert into rutinas (id, tipo_rutina, nombre, descripcion, deleted) values (1, "PERSONALIZADA" ,'Rutina para seba Avanzada', "Rutina para pierna, pecho, espalda y biceps avanzada", false);
+insert into rutinas (id, tipo_rutina, nombre, descripcion, deleted) values (2, "PREDETERMINADA",'Rutina para principiantes', "Rutina para pierna, pecho y esplada", false);  
 
 -- RUTINAS --
 
 
 -- RUTINAS USUARIOS --
 insert into rutinas_usuarios (usuarios_id, rutinas_id) values (1,1);
-
+insert into rutinas_usuarios (usuarios_id, rutinas_id) values (1,2);
 -- RUTINAS USUARIOS --
 
 -- ENTRENAMIENTOS --
@@ -52,6 +53,9 @@ insert into entrenamientos_rutina (rutinas_id, entrenamientos_id) values (1, 1);
 insert into entrenamientos_rutina (rutinas_id, entrenamientos_id) values (1, 2);
 insert into entrenamientos_rutina (rutinas_id, entrenamientos_id) values (1, 3);
 
+
+insert into entrenamientos_rutina (rutinas_id, entrenamientos_id) values (2, 1);
+insert into entrenamientos_rutina (rutinas_id, entrenamientos_id) values (2, 2);
 -- ENTRENAMIENTOS RUTINAS--
 
 

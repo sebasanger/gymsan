@@ -1,17 +1,21 @@
 package com.sanger.gymsan.services;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sanger.gymsan.dto.rutina.AddRemoveUserRutinaDto;
 import com.sanger.gymsan.dto.rutina.CreateRutinaDto;
+import com.sanger.gymsan.dto.rutina.RutinaConFlagDto;
 import com.sanger.gymsan.dto.rutina.UpdateRutinaDto;
 import com.sanger.gymsan.models.Entrenamiento;
 import com.sanger.gymsan.models.Rutina;
+import com.sanger.gymsan.models.TipoRutina;
 import com.sanger.gymsan.models.Usuario;
 import com.sanger.gymsan.repository.RutinaRepository;
 
@@ -48,7 +52,6 @@ public class RutinaService extends BaseService<Rutina, Long, RutinaRepository> {
 
         rutina.setUsuarios(usuarioDestinoList);
         rutina.setEntrenamientos(entrenamientos);
-        rutina.setCreador(user);
         rutina.setNombre(newEntity.getNombre());
         rutina.setDescripcion(newEntity.getDescripcion());
         rutina.setDeleted(false);
@@ -79,7 +82,6 @@ public class RutinaService extends BaseService<Rutina, Long, RutinaRepository> {
 
         rutina.setUsuarios(usuarioDestinoList);
         rutina.setEntrenamientos(entrenamientos);
-        rutina.setCreador(user);
         rutina.setNombre(updateEntity.getNombre());
         rutina.setDescripcion(updateEntity.getDescripcion());
         rutina.setDeleted(false);
@@ -118,6 +120,37 @@ public class RutinaService extends BaseService<Rutina, Long, RutinaRepository> {
 
     public Set<Rutina> obtenerRutinasPorUsuario(Long usuarioId) {
         return this.repository.findByUsuarios_Id(usuarioId);
+    }
+
+    public List<RutinaConFlagDto> obtenerRutinasParaUsuario(Long usuarioId) {
+
+        // Rutinas a las que ya está suscripto
+        Set<Rutina> suscriptas = this.repository.findByUsuarios_Id(usuarioId);
+
+        // Rutinas predeterminadas del sistema
+        Set<Rutina> predeterminadas = this.repository.findByTipoRutina(TipoRutina.PREDETERMINADA);
+
+        // Mapear a DTO y evitar duplicados
+        Set<Long> idsSuscriptas = suscriptas.stream()
+                .map(Rutina::getId)
+                .collect(Collectors.toSet());
+
+        List<RutinaConFlagDto> resultado = new ArrayList<>();
+
+        // Primero las suscriptas (marcadas)
+        resultado.addAll(
+                suscriptas.stream()
+                        .map(r -> RutinaConFlagDto.fromEntity(r, true))
+                        .toList());
+
+        // Luego las predeterminadas NO suscriptas
+        resultado.addAll(
+                predeterminadas.stream()
+                        .filter(r -> !idsSuscriptas.contains(r.getId()))
+                        .map(r -> RutinaConFlagDto.fromEntity(r, false))
+                        .toList());
+
+        return resultado;
     }
 
 }

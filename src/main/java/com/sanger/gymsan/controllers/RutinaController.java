@@ -1,5 +1,6 @@
 package com.sanger.gymsan.controllers;
 
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sanger.gymsan.dto.rutina.AddRemoveUserRutinaDto;
 import com.sanger.gymsan.dto.rutina.CreateRutinaDto;
+import com.sanger.gymsan.dto.rutina.RutinaConFlagDto;
 import com.sanger.gymsan.dto.rutina.UpdateRutinaDto;
 import com.sanger.gymsan.models.Rutina;
 import com.sanger.gymsan.models.Usuario;
@@ -45,13 +47,15 @@ public class RutinaController extends BaseController<Rutina, Long, RutinaService
     @PutMapping("/addUser")
     public ResponseEntity<?> addUser(@Valid @RequestBody AddRemoveUserRutinaDto addRemoveUserRutinaDto,
             @AuthenticationPrincipal Usuario user) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(rutinaService.agregarUsuarioRutina(addRemoveUserRutinaDto, user));
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .body(rutinaService.agregarUsuarioRutina(addRemoveUserRutinaDto, user));
     }
 
     @PutMapping("/removeUser")
     public ResponseEntity<?> removeUser(@Valid @RequestBody AddRemoveUserRutinaDto addRemoveUserRutinaDto,
             @AuthenticationPrincipal Usuario user) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(rutinaService.eliminarUsuarioRutina(addRemoveUserRutinaDto, user));
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .body(rutinaService.eliminarUsuarioRutina(addRemoveUserRutinaDto, user));
     }
 
     @GetMapping("/usuario/{usuarioId}")
@@ -64,6 +68,11 @@ public class RutinaController extends BaseController<Rutina, Long, RutinaService
     public ResponseEntity<?> obtenerRutinasPorUsuario(@AuthenticationPrincipal Usuario user) {
         Set<Rutina> rutinas = rutinaService.obtenerRutinasPorUsuario(user.getId());
         return ResponseEntity.ok(rutinas);
+    }
+
+    @GetMapping("/suscripciones")
+    public List<RutinaConFlagDto> obtenerRutinasUsuario(@AuthenticationPrincipal Usuario user) {
+        return rutinaService.obtenerRutinasParaUsuario(user.getId());
     }
 
 }

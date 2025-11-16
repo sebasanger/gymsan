@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.sanger.gymsan.models.Rutina;
+import com.sanger.gymsan.models.TipoRutina;
 import com.sanger.gymsan.pojections.RutinaView;
 
 public interface RutinaRepository extends JpaRepository<Rutina, Long> {
@@ -16,5 +17,7 @@ public interface RutinaRepository extends JpaRepository<Rutina, Long> {
     Optional<RutinaView> findProjectedById(@Param("id") Long id);
 
     Set<Rutina> findByUsuarios_Id(Long usuarioId);
+
+    Set<Rutina> findByTipoRutina(TipoRutina tipoRutina);
 
 }
