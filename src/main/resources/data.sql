@@ -25,7 +25,7 @@ insert into usuarios (id, full_name, documento, email, username, password, creat
 values (1, 'Sebastian Sangermano',"41616608", 'seba_sanger@hotmail.com','seba_sanger@hotmail.com','$2a$10$DBJhFdEGTeAqoLLsGfXwYObYXpt/amU0wpsRtKQtwJdC5n.MOXgxC',CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false),
  (2, 'Admin',"202020", 'admin@hotmail.com','admin@hotmail.com','$2a$10$DBJhFdEGTeAqoLLsGfXwYObYXpt/amU0wpsRtKQtwJdC5n.MOXgxC',CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false);
 
-insert into roles_usuarios (usuarios_id, roles_id) values (1,5);
+insert into roles_usuarios (usuarios_id, roles_id) values (1,1);
 -- USESRS --
 
 

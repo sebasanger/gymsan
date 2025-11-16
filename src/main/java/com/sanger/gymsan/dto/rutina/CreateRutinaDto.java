@@ -2,8 +2,8 @@ package com.sanger.gymsan.dto.rutina;
 
 import java.util.Set;
 
-import com.sanger.gymsan.dto.ejercicioEntrenamiento.CreateEjercicioEntrenamientoDto;
 import com.sanger.gymsan.dto.entrenamiento.CreateEntrenamientoDto;
+import com.sanger.gymsan.models.TipoRutina;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -24,6 +24,9 @@ public class CreateRutinaDto {
 
     @NotNull
     private String descripcion;
+
+    @NotNull
+    private TipoRutina tipoRutina;
 
     private Set<Long> usuariosId;
 

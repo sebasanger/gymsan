@@ -36,13 +36,25 @@ public class RutinaController extends BaseController<Rutina, Long, RutinaService
     @PostMapping("/save")
     public ResponseEntity<?> create(@Valid @RequestBody CreateRutinaDto newEntity,
             @AuthenticationPrincipal Usuario user) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(rutinaService.save(newEntity, user));
+        return ResponseEntity.status(HttpStatus.CREATED).body(rutinaService.save(newEntity, user, false));
     }
 
     @PutMapping("/update")
     public ResponseEntity<?> update(@Valid @RequestBody UpdateRutinaDto newEntity,
             @AuthenticationPrincipal Usuario user) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(rutinaService.update(newEntity, user));
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(rutinaService.update(newEntity, user, false));
+    }
+
+    @PostMapping("/save/own")
+    public ResponseEntity<?> createOwn(@Valid @RequestBody CreateRutinaDto newEntity,
+            @AuthenticationPrincipal Usuario user) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(rutinaService.save(newEntity, user, true));
+    }
+
+    @PutMapping("/update/own")
+    public ResponseEntity<?> updateOwn(@Valid @RequestBody UpdateRutinaDto newEntity,
+            @AuthenticationPrincipal Usuario user) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(rutinaService.update(newEntity, user, true));
     }
 
     @PutMapping("/addUser")

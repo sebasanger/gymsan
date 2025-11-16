@@ -3,6 +3,7 @@ package com.sanger.gymsan.dto.rutina;
 import java.util.Set;
 
 import com.sanger.gymsan.dto.entrenamiento.CreateEntrenamientoDto;
+import com.sanger.gymsan.models.TipoRutina;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,9 @@ public class UpdateRutinaDto {
 
     @NotNull
     private String nombre;
+
+    @NotNull
+    private TipoRutina tipoRutina;
 
     @NotNull
     private String descripcion;

@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sanger.gymsan.dto.rutina.AddRemoveUserRutinaDto;
 import com.sanger.gymsan.dto.rutina.CreateRutinaDto;
 import com.sanger.gymsan.dto.rutina.RutinaConFlagDto;
 import com.sanger.gymsan.dto.rutina.UpdateRutinaDto;
@@ -31,25 +30,28 @@ public class RutinaService extends BaseService<Rutina, Long, RutinaRepository> {
 
     private final EntrenamientoService entrenamientoService;
 
-    public Rutina save(CreateRutinaDto newEntity, Usuario user) {
+    public Rutina save(CreateRutinaDto newEntity, Usuario user, Boolean createForAuthUser) {
         Rutina rutina = new Rutina();
 
         Set<Usuario> usuarioDestinoList = new HashSet<>();
-        newEntity.getUsuariosId().forEach(us -> {
-
-            Usuario usuario = this.usuarioService.findById(us)
-                    .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
-            usuarioDestinoList.add(usuario);
-        });
+        if (createForAuthUser) {
+            usuarioDestinoList.add(user);
+        } else {
+            newEntity.getUsuariosId().forEach(us -> {
+                Usuario usuario = this.usuarioService.findById(us)
+                        .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+                usuarioDestinoList.add(usuario);
+            });
+        }
 
         Set<Entrenamiento> entrenamientos = new HashSet<>();
 
         newEntity.getEntrenamientos().forEach(entr -> {
-
             Entrenamiento entrenamiento = this.entrenamientoService.save(entr, user);
             entrenamientos.add(entrenamiento);
         });
 
+        rutina.setTipoRutina(newEntity.getTipoRutina());
         rutina.setUsuarios(usuarioDestinoList);
         rutina.setEntrenamientos(entrenamientos);
         rutina.setNombre(newEntity.getNombre());
@@ -60,17 +62,20 @@ public class RutinaService extends BaseService<Rutina, Long, RutinaRepository> {
 
     }
 
-    public Rutina update(UpdateRutinaDto updateEntity, Usuario user) {
+    public Rutina update(UpdateRutinaDto updateEntity, Usuario user, Boolean createForAuthUser) {
         Rutina rutina = this.repository.findById(updateEntity.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Rutina no encontrado"));
 
         Set<Usuario> usuarioDestinoList = new HashSet<>();
-        updateEntity.getUsuariosId().forEach(us -> {
-
-            Usuario usuario = this.usuarioService.findById(us)
-                    .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
-            usuarioDestinoList.add(usuario);
-        });
+        if (createForAuthUser) {
+            usuarioDestinoList.add(user);
+        } else {
+            updateEntity.getUsuariosId().forEach(us -> {
+                Usuario usuario = this.usuarioService.findById(us)
+                        .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+                usuarioDestinoList.add(usuario);
+            });
+        }
 
         Set<Entrenamiento> entrenamientos = new HashSet<>();
 
@@ -80,6 +85,7 @@ public class RutinaService extends BaseService<Rutina, Long, RutinaRepository> {
             entrenamientos.add(entrenamiento);
         });
 
+        rutina.setTipoRutina(updateEntity.getTipoRutina());
         rutina.setUsuarios(usuarioDestinoList);
         rutina.setEntrenamientos(entrenamientos);
         rutina.setNombre(updateEntity.getNombre());
