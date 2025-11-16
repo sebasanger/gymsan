@@ -90,12 +90,12 @@ public class RutinaService extends BaseService<Rutina, Long, RutinaRepository> {
 
     }
 
-    public Rutina agregarUsuarioRutina(AddRemoveUserRutinaDto addRemoveUserRutinaDto, Usuario user) {
+    public Rutina agregarUsuarioRutina(Long rutinaId, Long userId) {
 
-        Usuario usuario = this.usuarioService.findById(addRemoveUserRutinaDto.getUserId())
+        Usuario usuario = this.usuarioService.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
 
-        Rutina rutina = this.repository.findById(addRemoveUserRutinaDto.getRutinaId())
+        Rutina rutina = this.repository.findById(rutinaId)
                 .orElseThrow(() -> new EntityNotFoundException("Rutina no encontrado"));
 
         rutina.getUsuarios().add(usuario);
@@ -104,12 +104,12 @@ public class RutinaService extends BaseService<Rutina, Long, RutinaRepository> {
 
     }
 
-    public Rutina eliminarUsuarioRutina(AddRemoveUserRutinaDto addRemoveUserRutinaDto, Usuario user) {
+    public Rutina eliminarUsuarioRutina(Long rutinaId, Long userId) {
 
-        Usuario usuario = this.usuarioService.findById(addRemoveUserRutinaDto.getUserId())
+        Usuario usuario = this.usuarioService.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
 
-        Rutina rutina = this.repository.findById(addRemoveUserRutinaDto.getRutinaId())
+        Rutina rutina = this.repository.findById(rutinaId)
                 .orElseThrow(() -> new EntityNotFoundException("Rutina no encontrado"));
 
         rutina.getUsuarios().remove(usuario);

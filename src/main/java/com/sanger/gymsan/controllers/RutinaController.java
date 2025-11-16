@@ -6,6 +6,7 @@ import java.util.Set;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,14 +49,30 @@ public class RutinaController extends BaseController<Rutina, Long, RutinaService
     public ResponseEntity<?> addUser(@Valid @RequestBody AddRemoveUserRutinaDto addRemoveUserRutinaDto,
             @AuthenticationPrincipal Usuario user) {
         return ResponseEntity.status(HttpStatus.ACCEPTED)
-                .body(rutinaService.agregarUsuarioRutina(addRemoveUserRutinaDto, user));
+                .body(rutinaService.agregarUsuarioRutina(addRemoveUserRutinaDto.getRutinaId(),
+                        addRemoveUserRutinaDto.getUserId()));
     }
 
     @PutMapping("/removeUser")
     public ResponseEntity<?> removeUser(@Valid @RequestBody AddRemoveUserRutinaDto addRemoveUserRutinaDto,
             @AuthenticationPrincipal Usuario user) {
         return ResponseEntity.status(HttpStatus.ACCEPTED)
-                .body(rutinaService.eliminarUsuarioRutina(addRemoveUserRutinaDto, user));
+                .body(rutinaService.eliminarUsuarioRutina(addRemoveUserRutinaDto.getRutinaId(),
+                        addRemoveUserRutinaDto.getUserId()));
+    }
+
+    @PostMapping("/suscribe/{rutinaId}")
+    public ResponseEntity<?> suscribe(@PathVariable Long rutinaId,
+            @AuthenticationPrincipal Usuario user) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .body(rutinaService.agregarUsuarioRutina(rutinaId, user.getId()));
+    }
+
+    @DeleteMapping("/unsuscribe/{rutinaId}")
+    public ResponseEntity<?> unsuscribe(@PathVariable Long rutinaId,
+            @AuthenticationPrincipal Usuario user) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .body(rutinaService.eliminarUsuarioRutina(rutinaId, user.getId()));
     }
 
     @GetMapping("/usuario/{usuarioId}")
