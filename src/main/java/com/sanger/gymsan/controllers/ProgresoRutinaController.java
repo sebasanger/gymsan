@@ -28,7 +28,8 @@ public class ProgresoRutinaController extends BaseController<ProgresoRutina, Lon
     @PostMapping("/save")
     public ResponseEntity<?> addUser(@Valid @RequestBody CreateProgresoRutinaDto createProgresoRutinaDto,
             @AuthenticationPrincipal Usuario user) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(progresoRutinaService.save(createProgresoRutinaDto, user));
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .body(progresoRutinaService.save(createProgresoRutinaDto, user));
     }
 
     @PutMapping("/checkOut")
@@ -45,11 +46,17 @@ public class ProgresoRutinaController extends BaseController<ProgresoRutina, Lon
     @PutMapping("/guardarRutinaEntrenamiento")
     public ResponseEntity<?> checkOut(@Valid @RequestBody CreateProgresoRutinaDto createProgresoRutinaDto,
             @AuthenticationPrincipal Usuario user) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(progresoRutinaService.setRutinaAndEntrenamientoInCurrentProgreso(createProgresoRutinaDto, user));
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .body(progresoRutinaService.setRutinaAndEntrenamientoInCurrentProgreso(createProgresoRutinaDto, user));
     }
 
     @GetMapping("/last/active")
     public ResponseEntity<?> getLastActiveRoutineUser(@AuthenticationPrincipal Usuario user) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(progresoRutinaService.getLastActiveRoutineUser(user));
+    }
+
+    @GetMapping("/activas/count")
+    public ResponseEntity<Long> getCantidadRutinasActivas() {
+        return ResponseEntity.ok(progresoRutinaService.countRutinasActivas());
     }
 }

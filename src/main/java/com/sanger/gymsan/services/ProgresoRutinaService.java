@@ -188,4 +188,8 @@ public class ProgresoRutinaService extends BaseService<ProgresoRutina, Long, Pro
                                 .build();
         }
 
+        public long countRutinasActivas() {
+                return this.repository.countByCheckOutIsNull();
+        }
+
 }
