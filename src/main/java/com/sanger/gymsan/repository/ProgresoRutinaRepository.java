@@ -1,6 +1,7 @@
 package com.sanger.gymsan.repository;
 
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -15,6 +16,8 @@ public interface ProgresoRutinaRepository extends JpaRepository<ProgresoRutina, 
     Optional<ProgresoRutina> findTopByUsuarioDocumentoAndCheckOutIsNullOrderByCheckInDesc(String documento);
 
     Optional<ProgresoRutina> findTopByUsuarioIdAndCheckOutIsNullOrderByCheckInDesc(Long usuarioId);
+
+    Set<ProgresoRutina> findByUsuarioIdAndCheckOutIsNotNullOrderByCheckInDesc(Long usuarioId);
 
     long countByCheckOutIsNull();
 

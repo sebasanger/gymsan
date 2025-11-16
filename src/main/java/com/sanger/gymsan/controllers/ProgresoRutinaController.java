@@ -55,6 +55,11 @@ public class ProgresoRutinaController extends BaseController<ProgresoRutina, Lon
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(progresoRutinaService.getLastActiveRoutineUser(user));
     }
 
+    @GetMapping("/own")
+    public ResponseEntity<?> getOwnProgresosRutinas(@AuthenticationPrincipal Usuario user) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(progresoRutinaService.getAllRutinasConProgreso(user));
+    }
+
     @GetMapping("/activas/count")
     public ResponseEntity<Long> getCantidadRutinasActivas() {
         return ResponseEntity.ok(progresoRutinaService.countRutinasActivas());
