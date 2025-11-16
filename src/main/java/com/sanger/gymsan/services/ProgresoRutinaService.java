@@ -149,7 +149,6 @@ public class ProgresoRutinaService extends BaseService<ProgresoRutina, Long, Pro
 
                                         return EjercicioEntrenamientoConProgresoDto.builder()
                                                         .id(ee.getId())
-                                                        .entrenamiento(entrenamiento)
                                                         .ejercicio(ee.getEjercicio())
                                                         .series(ee.getSeries())
                                                         .repeticiones(ee.getRepeticiones())
@@ -170,6 +169,7 @@ public class ProgresoRutinaService extends BaseService<ProgresoRutina, Long, Pro
 
                 // 5. Retornar respuesta final
                 return RutinaActivaDto.builder()
+                                .id(progresoRutina.getId())
                                 .rutina(progresoRutina.getRutina())
                                 .entrenamientoSeleccionado(entrenamientoDto)
                                 .fecha(progresoRutina.getFecha())

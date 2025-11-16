@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class RutinaActivaDto {
+    private Long id;
     private Rutina rutina;
     private EntrenamientoConProgresoDto entrenamientoSeleccionado;
     private LocalDate fecha;

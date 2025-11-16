@@ -4,7 +4,6 @@ import java.util.Set;
 
 import com.sanger.gymsan.models.Ejercicio;
 import com.sanger.gymsan.models.EjercicioEntrenamiento;
-import com.sanger.gymsan.models.Entrenamiento;
 import com.sanger.gymsan.models.ProgresoEjercicio;
 
 import lombok.AllArgsConstructor;
@@ -19,8 +18,6 @@ import lombok.NoArgsConstructor;
 public class EjercicioEntrenamientoConProgresoDto {
 
     private Long id;
-
-    private Entrenamiento entrenamiento;
 
     private Ejercicio ejercicio;
 
