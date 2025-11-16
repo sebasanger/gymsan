@@ -98,15 +98,19 @@ values (1, 7);
 
 
 -- FOTOS --
-insert into fotos (id, foto) values (1, "urlParaFoto");
+insert into fotos (id, foto) values (1, "https://images.pexels.com/photos/3837757/pexels-photo-3837757.jpeg");
+insert into fotos (id, foto) values (2, "https://images.pexels.com/photos/5327556/pexels-photo-5327556.jpeg");
+insert into fotos (id, foto) values (3, "https://images.pexels.com/photos/4944955/pexels-photo-4944955.jpeg");
 -- FOTOS --
 
 -- VIDEOS --
-insert into videos (id, video) values (1, "urlParaVideo");
+insert into videos (id, video) values (1, "https://www.youtube.com/shorts/hWbUlkb5Ms4?feature=share");
 -- VIDEOS --
 
 -- FOTOS EJERCICIOS --
 insert into fotos_ejercicio (fotos_id, ejercicios_id) values (1, 1);
+insert into fotos_ejercicio (fotos_id, ejercicios_id) values (2, 1);
+insert into fotos_ejercicio (fotos_id, ejercicios_id) values (3, 1);
 -- FOTOS EJERCICIOS --
 
 -- FOTOS VIDEOS --
