@@ -22,10 +22,15 @@ insert into categorias (id, categoria, tipo) values (7, 'Triceps',"EJERCICIO");
 --USESRS--
 -- Contraseña: Admin1
 insert into usuarios (id, full_name, documento, email, username, password, created_at, last_password_change_at, enabled, deleted) 
-values (1, 'Sebastian Sangermano',"41616608", 'seba_sanger@hotmail.com','seba_sanger@hotmail.com','$2a$10$DBJhFdEGTeAqoLLsGfXwYObYXpt/amU0wpsRtKQtwJdC5n.MOXgxC',CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false),
- (2, 'Admin',"202020", 'admin@hotmail.com','admin@hotmail.com','$2a$10$DBJhFdEGTeAqoLLsGfXwYObYXpt/amU0wpsRtKQtwJdC5n.MOXgxC',CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false);
+values 
+(1, 'Sebastian Sangermano',"41616608", 'seba_sanger@hotmail.com','seba_sanger@hotmail.com','$2a$10$DBJhFdEGTeAqoLLsGfXwYObYXpt/amU0wpsRtKQtwJdC5n.MOXgxC',CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false),
+(2, 'Admin',"101010", 'admin@hotmail.com','admin@hotmail.com','$2a$10$DBJhFdEGTeAqoLLsGfXwYObYXpt/amU0wpsRtKQtwJdC5n.MOXgxC',CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false),
+(3, 'Gimnasio',"0", 'gimnasio@hotmail.com','gimnasio@hotmail.com','$2a$10$DBJhFdEGTeAqoLLsGfXwYObYXpt/amU0wpsRtKQtwJdC5n.MOXgxC',CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false),
+(4, 'Inactiva', "202020", 'inactiva@hotmail.com','inactiva@hotmail.com','$2a$10$DBJhFdEGTeAqoLLsGfXwYObYXpt/amU0wpsRtKQtwJdC5n.MOXgxC',CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false);
 
 insert into roles_usuarios (usuarios_id, roles_id) values (1,5);
+insert into roles_usuarios (usuarios_id, roles_id) values (2,1);
+insert into roles_usuarios (usuarios_id, roles_id) values (3,6);
 -- USESRS --
 
 
@@ -144,7 +149,7 @@ insert into pagos_membresias (membresias_usuarios_id, pagos_id) values (2, 2);
 -- POGRESOS RUTINAS --
 insert into progresos_rutinas (id, usuarios_id, rutinas_id, entrenamientos_id, check_in, check_out, fecha) values (1, 1, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIME);
 
-insert into progresos_rutinas (id, usuarios_id, rutinas_id, entrenamientos_id, check_in, fecha) values (2, 1, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIME );
+insert into progresos_rutinas (id, usuarios_id, rutinas_id, entrenamientos_id, check_in, check_out, fecha) values (2, 1, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIME );
 -- POGRESOS RUTINAS --
 
 
@@ -169,3 +174,64 @@ insert into series_progresos_rutinas (series_id, progresos_ejercicios_id) values
 
 insert into series_progresos_rutinas (series_id, progresos_ejercicios_id) values (9, 3), (10, 3), (11, 3), (12, 3);
 -- SERIES PROGRESOS EJERCICIOS --
+
+
+-- NUEVAS RUTINAS --
+insert into rutinas (id, tipo_rutina, nombre, descripcion, deleted) values 
+(3, "PERSONALIZADA", 'Rutina Full Body Intermedia', "Rutina de cuerpo completo para nivel intermedio", false),
+(4, "PREDETERMINADA", 'Rutina para Avanzados', "Rutina avanzada de fuerza y resistencia", false);
+
+-- RUTINAS USUARIOS --
+insert into rutinas_usuarios (usuarios_id, rutinas_id) values 
+(1, 3),
+(1, 4);
+
+-- NUEVOS ENTRENAMIENTOS --
+insert into entrenamientos (id, nombre, descripcion, categorias_id, deleted) values 
+(4, "Full Body Intermedio", "Entrenamiento de cuerpo completo intermedio", 1, false),
+(5, "Entrenamiento de fuerza avanzada", "Entrenamiento avanzado para fuerza", 2, false);
+
+-- ENTRENAMIENTOS RUTINAS --
+insert into entrenamientos_rutina (rutinas_id, entrenamientos_id) values 
+(3, 4),
+(4, 5);
+
+-- NUEVOS EJERCICIOS --
+insert into ejercicios (id, nombre, descripcion, categorias_id, deleted) values
+(12, 'dominadas asistidas', 'Ejercicio de tracción con asistencia', 2, false),
+(13, 'curl martillo', 'Ejercicio de bíceps con agarre neutro', 5, false),
+(14, 'press militar', 'Ejercicio de hombro con barra', 4, false);
+
+-- EJERCICIOS ENTRENAMIENTOS --
+insert into ejercicios_entrenamientos (id, ejercicios_id, entrenamientos_id, series, peso, repeticiones) values
+(8, 12, 4, 3, 50, 10),
+(9, 13, 4, 4, 20, 12),
+(10, 14, 5, 4, 40, 8);
+
+-- EJERCICIOS ALTERNATIVOS --
+insert into ejercicios_alternativos (ejercicio_entrenamiento_id, alternativo_id) values
+(8, 4),
+(9, 7);
+
+-- PROGRESOS RUTINAS NUEVOS --
+insert into progresos_rutinas (id, usuarios_id, rutinas_id, entrenamientos_id, check_in, check_out, fecha) values
+(3, 1, 3, 4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIME),
+(4, 1, 4, 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIME);
+
+-- PROGRESOS EJERCICIOS NUEVOS --
+insert into progresos_ejercicios (id, progresos_rutinas_id, ejercicios_id, cantidad_series) values
+(4, 3, 12, 3),
+(5, 3, 13, 4),
+(6, 4, 14, 4);
+
+-- SERIES NUEVAS --
+insert into series (id, repeticiones, peso) values
+(13, 10, 50), (14, 12, 50), (15, 8, 50),
+(16, 12, 20), (17, 12, 20), (18, 12, 20), (19, 12, 20),
+(20, 8, 40), (21, 8, 40), (22, 8, 40), (23, 8, 40);
+
+-- SERIES PROGRESOS EJERCICIOS NUEVAS --
+insert into series_progresos_rutinas (series_id, progresos_ejercicios_id) values
+(13, 4), (14, 4), (15, 4),
+(16, 5), (17, 5), (18, 5), (19, 5),
+(20, 6), (21, 6), (22, 6), (23, 6);
