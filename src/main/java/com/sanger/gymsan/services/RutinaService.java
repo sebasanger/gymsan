@@ -6,12 +6,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sanger.gymsan.dto.rutina.CreateRutinaDto;
 import com.sanger.gymsan.dto.rutina.RutinaConFlagDto;
 import com.sanger.gymsan.dto.rutina.UpdateRutinaDto;
+import com.sanger.gymsan.exceptions.UserCantUpdateRutinaException;
 import com.sanger.gymsan.models.Entrenamiento;
 import com.sanger.gymsan.models.Rutina;
 import com.sanger.gymsan.models.TipoRutina;
@@ -32,6 +34,8 @@ public class RutinaService extends BaseService<Rutina, Long, RutinaRepository> {
 
     public Rutina save(CreateRutinaDto newEntity, Usuario user, Boolean createForAuthUser) {
         Rutina rutina = new Rutina();
+
+        this.checkOwner(user, rutina);
 
         Set<Usuario> usuarioDestinoList = new HashSet<>();
         if (createForAuthUser) {
@@ -65,6 +69,8 @@ public class RutinaService extends BaseService<Rutina, Long, RutinaRepository> {
     public Rutina update(UpdateRutinaDto updateEntity, Usuario user, Boolean createForAuthUser) {
         Rutina rutina = this.repository.findById(updateEntity.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Rutina no encontrado"));
+
+        this.checkOwner(user, rutina);
 
         Set<Usuario> usuarioDestinoList = new HashSet<>();
         if (createForAuthUser) {
@@ -157,6 +163,16 @@ public class RutinaService extends BaseService<Rutina, Long, RutinaRepository> {
                         .toList());
 
         return resultado;
+    }
+
+    private void checkOwner(Usuario user, Rutina rutina) {
+        boolean isAdmin = user.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(auth -> auth.equals("ROLE_ADMIN") || auth.equals("ROLE_ENTRENADOR"));
+
+        if (!isAdmin && rutina.getTipoRutina().equals(TipoRutina.PREDETERMINADA)) {
+            throw new UserCantUpdateRutinaException();
+        }
     }
 
 }

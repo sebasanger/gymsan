@@ -26,6 +26,7 @@ import com.sanger.gymsan.exceptions.NewUserWithDifferentPasswordsException;
 import com.sanger.gymsan.exceptions.PasswordNotMismatch;
 import com.sanger.gymsan.exceptions.SearchEntityNoResultException;
 import com.sanger.gymsan.exceptions.UltimoCheckInNoRegistradoException;
+import com.sanger.gymsan.exceptions.UserCantUpdateRutinaException;
 import com.sanger.gymsan.exceptions.UserNotFoundException;
 
 import jakarta.mail.AuthenticationFailedException;
@@ -34,32 +35,32 @@ import jakarta.persistence.EntityNotFoundException;
 @RestControllerAdvice
 public class GlobalControllerAdvice extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler({EntityNotFoundException.class, SearchEntityNoResultException.class, UserNotFoundException.class,
-        FindEntityByIdNotFoundException.class, EntitiesNotFoundException.class})
+    @ExceptionHandler({ EntityNotFoundException.class, SearchEntityNoResultException.class, UserNotFoundException.class,
+            FindEntityByIdNotFoundException.class, EntitiesNotFoundException.class })
     public ResponseEntity<ApiError> handleNotFound(Exception ex) {
         ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
     }
 
-    @ExceptionHandler({NewUserWithDifferentPasswordsException.class, PasswordNotMismatch.class,})
+    @ExceptionHandler({ NewUserWithDifferentPasswordsException.class, PasswordNotMismatch.class, })
     public ResponseEntity<ApiError> handleBadRequest(Exception ex) {
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
     }
 
-    @ExceptionHandler({MembresiaNoVigenteException.class, MembresiaNotEncontradaException.class})
+    @ExceptionHandler({ MembresiaNoVigenteException.class, MembresiaNotEncontradaException.class })
     public ResponseEntity<ApiError> handleMembresiaExceptions(Exception ex) {
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
     }
 
-    @ExceptionHandler({UltimoCheckInNoRegistradoException.class})
+    @ExceptionHandler({ UltimoCheckInNoRegistradoException.class, UserCantUpdateRutinaException.class })
     public ResponseEntity<ApiError> checkInOutExceptionsHandling(Exception ex) {
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
     }
 
-    @ExceptionHandler({ConstraintViolationException.class})
+    @ExceptionHandler({ ConstraintViolationException.class })
     public ResponseEntity<ApiError> handleContrainValidationError(ConstraintViolationException ex) {
 
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, "Error");
@@ -85,7 +86,7 @@ public class GlobalControllerAdvice extends ResponseEntityExceptionHandler {
 
     }
 
-    @ExceptionHandler({DataIntegrityViolationException.class})
+    @ExceptionHandler({ DataIntegrityViolationException.class })
     public ResponseEntity<ApiError> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
 
         ApiError apiError = new ApiError(HttpStatus.CONFLICT,
@@ -95,7 +96,7 @@ public class GlobalControllerAdvice extends ResponseEntityExceptionHandler {
 
     }
 
-    @ExceptionHandler({AuthenticationFailedException.class})
+    @ExceptionHandler({ AuthenticationFailedException.class })
     public ResponseEntity<ApiError> handleDataIntegrityViolation(AuthenticationFailedException ex) {
 
         ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR,
