@@ -5,6 +5,11 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.mapping.SoftDeletable;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,6 +19,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.sanger.gymsan.services.SoftDeletableInterface;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -42,7 +48,10 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Usuario implements UserDetails {
+@SQLDelete(sql = "UPDATE usuarios SET deleted = true WHERE id = ?")
+@FilterDef(name = "deletedFilter", parameters = @ParamDef(name = "isDeleted", type = Boolean.class))
+@Filter(name = "deletedFilter", condition = "deleted = :isDeleted")
+public class Usuario implements UserDetails, SoftDeletableInterface {
 
     private static final long serialVersionUID = 6189678452627071360L;
 
@@ -75,11 +84,18 @@ public class Usuario implements UserDetails {
 
     private Boolean deleted;
 
+    @Override
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    @Override
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "roles_usuarios",
-            joinColumns = @JoinColumn(name = "usuarios_id"),
-            inverseJoinColumns = @JoinColumn(name = "roles_id"))
+    @JoinTable(name = "roles_usuarios", joinColumns = @JoinColumn(name = "usuarios_id"), inverseJoinColumns = @JoinColumn(name = "roles_id"))
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @JsonManagedReference

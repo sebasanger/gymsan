@@ -3,22 +3,24 @@ package com.sanger.gymsan.models;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
+import org.hibernate.annotations.SQLDelete;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.sanger.gymsan.services.SoftDeletableInterface;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,7 +33,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MembresiaUsuario {
+@SQLDelete(sql = "UPDATE membresias_usuarios SET deleted = true WHERE id = ?")
+@FilterDef(name = "deletedFilter", parameters = @ParamDef(name = "isDeleted", type = Boolean.class))
+@Filter(name = "deletedFilter", condition = "deleted = :isDeleted")
+public class MembresiaUsuario implements SoftDeletableInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,7 +45,7 @@ public class MembresiaUsuario {
     @ManyToOne
     @JoinColumn(name = "usuarios_id")
     @JsonManagedReference
-    @JsonIncludeProperties({"id", "fullName", "documento"})
+    @JsonIncludeProperties({ "id", "fullName", "documento" })
     private Usuario usuario;
 
     @ManyToOne
@@ -57,6 +62,16 @@ public class MembresiaUsuario {
     private Boolean enabled;
 
     private Boolean deleted;
+
+    @Override
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    @Override
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
 
     @ManyToMany(mappedBy = "membresiasUsuarios")
     @JsonIgnore

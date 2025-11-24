@@ -43,19 +43,10 @@ public class UserController {
     private final UserDtoConverter userDtoConverter;
 
     @GetMapping("")
-    public ResponseEntity<?> getUsers() {
-        List<Usuario> result = userEntityService.findAll(false);
-
-        if (result.isEmpty()) {
-            throw new UserNotFoundException();
-        } else {
-            return ResponseEntity.ok().body(result);
-        }
-    }
-
-    @GetMapping("/includedDeleted")
-    public ResponseEntity<?> getAllIncludedDeleted() {
-        List<Usuario> result = userEntityService.findAll(true);
+    public ResponseEntity<?> getAll(
+            @RequestParam(value = "includeDeleted", required = false, defaultValue = "false") boolean includeDeleted,
+            @RequestParam(value = "rol", required = false, defaultValue = "false") boolean rol) {
+        List<Usuario> result = userEntityService.findAll(includeDeleted);
 
         if (result.isEmpty()) {
             throw new EntityNotFoundException();
@@ -127,7 +118,7 @@ public class UserController {
         return userEntityService.checkEmailIsValid(checkEmailIsValidDto);
     }
 
-    @PutMapping({"", "/recover/{id}"})
+    @PutMapping({ "", "/recover/{id}" })
     public ResponseEntity<Usuario> recover(@PathVariable(required = true) Long id) {
         userEntityService.recover(id);
         return ResponseEntity.noContent().build();

@@ -183,8 +183,7 @@ insert into rutinas (id, tipo_rutina, nombre, descripcion, deleted) values
 
 -- RUTINAS USUARIOS --
 insert into rutinas_usuarios (usuarios_id, rutinas_id) values 
-(1, 3),
-(1, 4);
+(1, 3);
 
 -- NUEVOS ENTRENAMIENTOS --
 insert into entrenamientos (id, nombre, descripcion, categorias_id, deleted) values 

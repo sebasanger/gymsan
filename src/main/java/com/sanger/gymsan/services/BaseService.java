@@ -1,20 +1,25 @@
 package com.sanger.gymsan.services;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.PersistenceContext;
 
 public abstract class BaseService<T, ID, R extends JpaRepository<T, ID>> {
 
     @Autowired
     protected R repository;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public T save(T t) {
         return repository.save(t);
@@ -24,30 +29,17 @@ public abstract class BaseService<T, ID, R extends JpaRepository<T, ID>> {
         return repository.findById(id);
     }
 
-    public List<T> findAll(boolean includingDeletedEntity) {
+    public List<T> findAll(boolean includeDeleted) {
 
-        List<T> all = repository.findAll();
+        Session session = entityManager.unwrap(Session.class);
 
-        if (includingDeletedEntity || all.isEmpty()) {
-            return all;
+        if (!includeDeleted) {
+            session.enableFilter("deletedFilter").setParameter("isDeleted", false);
+        } else {
+            session.disableFilter("deletedFilter");
         }
 
-        try {
-            Field deletedField = all.get(0).getClass().getDeclaredField("deleted");
-            deletedField.setAccessible(true);
-            return all.stream()
-                    .filter(e -> {
-                        try {
-                            return !(Boolean) deletedField.get(e);
-                        } catch (IllegalAccessException ex) {
-                            throw new RuntimeException("No se puede acceder al campo deleted", ex);
-                        }
-                    })
-                    .toList();
-        } catch (NoSuchFieldException e) {
-            return all;
-        }
-
+        return repository.findAll();
     }
 
     public Page<T> findAll(Pageable pageable) {
@@ -59,33 +51,30 @@ public abstract class BaseService<T, ID, R extends JpaRepository<T, ID>> {
     }
 
     public void delete(T t) {
-        try {
-            Field deletedField = t.getClass().getDeclaredField("deleted");
-            deletedField.setAccessible(true);
-            deletedField.set(t, true);
-            repository.save(t);
-        } catch (NoSuchFieldException e) {
-            repository.delete(t);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException("No se puede acceder al campo deleted", e);
-        }
-    }
-
-    public void recover(ID id) {
-        try {
-            T entity = this.findById(id).orElseThrow(() -> new EntityNotFoundException());
-            Field deletedField = entity.getClass().getDeclaredField("deleted");
-            deletedField.setAccessible(true);
-            deletedField.set(entity, false);
-            repository.save(entity);
-
-        } catch (IllegalAccessException | NoSuchFieldException e) {
-            throw new RuntimeException("No se puede acceder al campo deleted", e);
-        }
+        repository.delete(t);
     }
 
     public void deleteById(ID id) {
         repository.deleteById(id);
+    }
+
+    public Optional<T> findByIdIncludingDeleted(ID id) {
+
+        Session session = entityManager.unwrap(Session.class);
+        session.enableFilter("deletedFilter").setParameter("isDeleted", false);
+        return this.repository.findById(id);
+    }
+
+    public void recover(ID id) {
+        T entity = this.findByIdIncludingDeleted(id)
+                .orElseThrow(EntityNotFoundException::new);
+
+        if (entity instanceof SoftDeletableInterface softDeletable) {
+            softDeletable.setDeleted(false);
+            repository.save(entity);
+        } else {
+            throw new RuntimeException("La entidad no implementa SoftDeletable");
+        }
     }
 
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.sanger.gymsan.services.BaseService;
 
@@ -27,19 +28,9 @@ public abstract class BaseController<E, ID, S extends BaseService<E, ID, ?>> {
     protected S service;
 
     @GetMapping("")
-    public ResponseEntity<?> getAll() {
-        List<E> result = service.findAll(false);
-
-        if (result.isEmpty()) {
-            throw new EntityNotFoundException();
-        } else {
-            return ResponseEntity.ok().body(result);
-        }
-    }
-
-    @GetMapping("/includedDeleted")
-    public ResponseEntity<?> getAllIncludedDeleted() {
-        List<E> result = service.findAll(true);
+    public ResponseEntity<?> getAll(
+            @RequestParam(value = "includeDeleted", required = false, defaultValue = "false") boolean includeDeleted) {
+        List<E> result = service.findAll(includeDeleted);
 
         if (result.isEmpty()) {
             throw new EntityNotFoundException();
@@ -72,15 +63,9 @@ public abstract class BaseController<E, ID, S extends BaseService<E, ID, ?>> {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(newEntity));
     }
 
-    @PutMapping({"", "/{id}"})
+    @PutMapping({ "", "/{id}" })
     public ResponseEntity<E> update(@Valid @RequestBody E entity, @PathVariable(required = false) Long id) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.update(entity));
-    }
-
-    @PutMapping({"", "/recover/{id}"})
-    public ResponseEntity<E> recover(@PathVariable(required = true) ID id) {
-        service.recover(id);
-        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
@@ -88,7 +73,12 @@ public abstract class BaseController<E, ID, S extends BaseService<E, ID, ?>> {
         E entity = service.findById(id).orElseThrow(() -> new EntityNotFoundException());
         service.delete(entity);
         return ResponseEntity.noContent().build();
+    }
 
+    @PutMapping({ "", "/recover/{id}" })
+    public ResponseEntity<E> recover(@PathVariable(required = true) ID id) {
+        service.recover(id);
+        return ResponseEntity.noContent().build();
     }
 
 }
