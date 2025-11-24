@@ -1,7 +1,9 @@
 package com.sanger.gymsan.services;
 
+import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,9 +21,12 @@ import com.sanger.gymsan.dto.user.UpdateUserDto;
 import com.sanger.gymsan.dto.user.UserDtoConverter;
 import com.sanger.gymsan.exceptions.PasswordNotMismatch;
 import com.sanger.gymsan.exceptions.UserNotFoundException;
+import com.sanger.gymsan.models.Rol;
 import com.sanger.gymsan.models.Usuario;
 import com.sanger.gymsan.repository.UserEntityRepository;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -37,6 +42,9 @@ public class UsuarioService extends BaseService<Usuario, Long, UserEntityReposit
 
     private final RolService rolService;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Value("${base.url.frontend}")
     private String urlFrontend;
 
@@ -45,6 +53,19 @@ public class UsuarioService extends BaseService<Usuario, Long, UserEntityReposit
 
     public Optional<Usuario> findUserByUsername(String username) {
         return this.repository.findByUsername(username);
+    }
+
+    public List<Usuario> findAllByRol(boolean includeDeleted, List<String> rol) {
+
+        Session session = entityManager.unwrap(Session.class);
+
+        if (!includeDeleted) {
+            session.enableFilter("deletedFilter").setParameter("isDeleted", false);
+        } else {
+            session.disableFilter("deletedFilter");
+        }
+
+        return repository.findByRoles_RolIn(rol);
     }
 
     public Page<Usuario> filterUser(String filter, Pageable pageable) {

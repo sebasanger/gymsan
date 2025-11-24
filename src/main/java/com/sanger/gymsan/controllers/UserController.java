@@ -45,8 +45,13 @@ public class UserController {
     @GetMapping("")
     public ResponseEntity<?> getAll(
             @RequestParam(value = "includeDeleted", required = false, defaultValue = "false") boolean includeDeleted,
-            @RequestParam(value = "rol", required = false, defaultValue = "false") boolean rol) {
-        List<Usuario> result = userEntityService.findAll(includeDeleted);
+            @RequestParam(value = "rol", required = false) List<String> rol) {
+        List<Usuario> result;
+        if (rol != null) {
+            result = userEntityService.findAllByRol(includeDeleted, rol);
+        } else {
+            result = userEntityService.findAll(includeDeleted);
+        }
 
         if (result.isEmpty()) {
             throw new EntityNotFoundException();

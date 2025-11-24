@@ -1,5 +1,6 @@
 package com.sanger.gymsan.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -20,5 +21,9 @@ public interface UserEntityRepository extends JpaRepository<Usuario, Long> {
 
     Page<Usuario> findByUsernameIgnoreCaseContainingOrFullNameIgnoreCaseContaining(String username, String email,
             Pageable pageable);
+
+    List<Usuario> findByRoles_Rol(String rol);
+
+    List<Usuario> findByRoles_RolIn(List<String> roles);
 
 }
