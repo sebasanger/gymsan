@@ -8,6 +8,7 @@ import org.hibernate.annotations.ParamDef;
 import org.hibernate.annotations.SQLDelete;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.sanger.gymsan.services.SoftDeletableInterface;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,7 +32,7 @@ import lombok.NoArgsConstructor;
 @SQLDelete(sql = "UPDATE membresias SET deleted = true WHERE id = ?")
 @FilterDef(name = "deletedFilter", parameters = @ParamDef(name = "isDeleted", type = Boolean.class))
 @Filter(name = "deletedFilter", condition = "deleted = :isDeleted")
-public class Membresia {
+public class Membresia implements SoftDeletableInterface {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,6 +43,16 @@ public class Membresia {
     private Double precio;
 
     private Boolean deleted;
+
+    @Override
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    @Override
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
 
     @Column(length = 255)
     private String descripcion;
