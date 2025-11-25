@@ -59,6 +59,9 @@ public class MembresiaUsuario implements SoftDeletableInterface {
     @Column(name = "fecha_vencimiento")
     private LocalDateTime fechaVencimiento;
 
+    @Column(name = "fecha_ultimo_pago")
+    private LocalDateTime fechaUltimoPago;
+
     private Boolean enabled;
 
     private Boolean deleted;

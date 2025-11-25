@@ -21,7 +21,6 @@ import com.sanger.gymsan.dto.user.UpdateUserDto;
 import com.sanger.gymsan.dto.user.UserDtoConverter;
 import com.sanger.gymsan.exceptions.PasswordNotMismatch;
 import com.sanger.gymsan.exceptions.UserNotFoundException;
-import com.sanger.gymsan.models.Rol;
 import com.sanger.gymsan.models.Usuario;
 import com.sanger.gymsan.repository.UserEntityRepository;
 
