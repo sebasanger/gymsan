@@ -26,11 +26,14 @@ values
 (1, 'Sebastian Sangermano',"41616608", 'seba_sanger@hotmail.com','seba_sanger@hotmail.com','$2a$10$DBJhFdEGTeAqoLLsGfXwYObYXpt/amU0wpsRtKQtwJdC5n.MOXgxC',CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false),
 (2, 'Admin',"101010", 'admin@hotmail.com','admin@hotmail.com','$2a$10$DBJhFdEGTeAqoLLsGfXwYObYXpt/amU0wpsRtKQtwJdC5n.MOXgxC',CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false),
 (3, 'Gimnasio',"0", 'gimnasio@hotmail.com','gimnasio@hotmail.com','$2a$10$DBJhFdEGTeAqoLLsGfXwYObYXpt/amU0wpsRtKQtwJdC5n.MOXgxC',CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false),
-(4, 'Inactiva', "202020", 'inactiva@hotmail.com','inactiva@hotmail.com','$2a$10$DBJhFdEGTeAqoLLsGfXwYObYXpt/amU0wpsRtKQtwJdC5n.MOXgxC',CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false);
+(4, 'Inactiva', "202020", 'inactiva@hotmail.com','inactiva@hotmail.com','$2a$10$DBJhFdEGTeAqoLLsGfXwYObYXpt/amU0wpsRtKQtwJdC5n.MOXgxC',CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, true),
+(5, 'User',"1", 'user@hotmail.com','user@hotmail.com','$2a$10$DBJhFdEGTeAqoLLsGfXwYObYXpt/amU0wpsRtKQtwJdC5n.MOXgxC',CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false);
 
 insert into roles_usuarios (usuarios_id, roles_id) values (1,5);
 insert into roles_usuarios (usuarios_id, roles_id) values (2,1);
 insert into roles_usuarios (usuarios_id, roles_id) values (3,6);
+insert into roles_usuarios (usuarios_id, roles_id) values (4,5);
+insert into roles_usuarios (usuarios_id, roles_id) values (5,5);
 -- USESRS --
 
 
@@ -131,7 +134,8 @@ insert into membresias (id, nombre, precio, descripcion, cantidad_clases, delete
 -- MEMBRESIAS USUARIOS --
 insert into membresias_usuarios (id, membresias_id, usuarios_id, fecha_inscripcion, fecha_vencimiento, deleted, enabled) values 
 (1, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false),
-(2, 2, 1, CURRENT_TIMESTAMP, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 30 DAY), false, true);
+(2, 2, 1, CURRENT_TIMESTAMP, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 30 DAY), false, true),
+(3, 1, 5, DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 60 DAY), DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 30 DAY), false, true);
 -- MEMBRESIAS USUARIOS --
 
 -- PAGOS --
