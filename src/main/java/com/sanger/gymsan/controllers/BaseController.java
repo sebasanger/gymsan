@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.sanger.gymsan.exceptions.EntitiesNotFoundException;
 import com.sanger.gymsan.services.BaseService;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -33,7 +34,7 @@ public abstract class BaseController<E, ID, S extends BaseService<E, ID, ?>> {
         List<E> result = service.findAll(includeDeleted);
 
         if (result.isEmpty()) {
-            throw new EntityNotFoundException();
+            throw new EntitiesNotFoundException();
         } else {
             return ResponseEntity.ok().body(result);
         }
@@ -46,7 +47,7 @@ public abstract class BaseController<E, ID, S extends BaseService<E, ID, ?>> {
         Page<E> result = service.findAll(pageable);
 
         if (result.isEmpty()) {
-            throw new EntityNotFoundException();
+            throw new EntitiesNotFoundException();
         } else {
             return ResponseEntity.ok().body(result);
         }
@@ -54,7 +55,7 @@ public abstract class BaseController<E, ID, S extends BaseService<E, ID, ?>> {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable ID id) {
-        E result = service.findById(id).orElseThrow(() -> new EntityNotFoundException());
+        E result = service.findById(id).orElseThrow(() -> new EntityNotFoundException("No se encontro con ese ID"));
         return ResponseEntity.ok().body(result);
     }
 

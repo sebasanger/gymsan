@@ -26,11 +26,11 @@ import com.sanger.gymsan.dto.user.GetUsersDto;
 import com.sanger.gymsan.dto.user.UpdateAcountDto;
 import com.sanger.gymsan.dto.user.UpdateUserDto;
 import com.sanger.gymsan.dto.user.UserDtoConverter;
+import com.sanger.gymsan.exceptions.EntitiesNotFoundException;
 import com.sanger.gymsan.exceptions.UserNotFoundException;
 import com.sanger.gymsan.models.Usuario;
 import com.sanger.gymsan.services.UsuarioService;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -54,7 +54,7 @@ public class UserController {
         }
 
         if (result.isEmpty()) {
-            throw new EntityNotFoundException();
+            throw new EntitiesNotFoundException();
         } else {
             return ResponseEntity.ok().body(result);
         }

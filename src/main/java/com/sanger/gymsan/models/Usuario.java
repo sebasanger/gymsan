@@ -9,7 +9,6 @@ import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.ParamDef;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.mapping.SoftDeletable;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,7 +20,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sanger.gymsan.services.SoftDeletableInterface;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -86,7 +84,7 @@ public class Usuario implements UserDetails, SoftDeletableInterface {
 
     @Override
     public boolean isDeleted() {
-        return deleted;
+        return this.deleted;
     }
 
     @Override
@@ -101,7 +99,7 @@ public class Usuario implements UserDetails, SoftDeletableInterface {
     @JsonManagedReference
     private Set<Rol> roles;
 
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
     @JsonBackReference
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

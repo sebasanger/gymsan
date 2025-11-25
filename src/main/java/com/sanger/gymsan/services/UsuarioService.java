@@ -54,17 +54,17 @@ public class UsuarioService extends BaseService<Usuario, Long, UserEntityReposit
         return this.repository.findByUsername(username);
     }
 
-    public List<Usuario> findAllByRol(boolean includeDeleted, List<String> rol) {
+    public List<Usuario> findAllByRol(boolean includeDeleted, List<String> roles) {
 
         Session session = entityManager.unwrap(Session.class);
 
         if (!includeDeleted) {
-            session.enableFilter("deletedFilter").setParameter("isDeleted", false);
+            session.enableFilter("deletedFilter").setParameter("isDeleted", includeDeleted);
         } else {
             session.disableFilter("deletedFilter");
         }
-
-        return repository.findByRoles_RolIn(rol);
+        session.disableFilter("deletedFilter");
+        return repository.findUsuariosByRoles(roles);
     }
 
     public Page<Usuario> filterUser(String filter, Pageable pageable) {

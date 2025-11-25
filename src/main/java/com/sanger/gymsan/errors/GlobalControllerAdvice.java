@@ -38,7 +38,11 @@ public class GlobalControllerAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler({ EntityNotFoundException.class, SearchEntityNoResultException.class, UserNotFoundException.class,
             FindEntityByIdNotFoundException.class, EntitiesNotFoundException.class })
     public ResponseEntity<ApiError> handleNotFound(Exception ex) {
-        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex.getMessage());
+        String msg = (ex.getMessage() != null && !ex.getMessage().isBlank())
+                ? ex.getMessage()
+                : "Recurso no encontrado";
+
+        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, msg);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
     }
 
@@ -97,12 +101,22 @@ public class GlobalControllerAdvice extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({ AuthenticationFailedException.class })
-    public ResponseEntity<ApiError> handleDataIntegrityViolation(AuthenticationFailedException ex) {
+    public ResponseEntity<ApiError> authEmailFailed(AuthenticationFailedException ex) {
 
         ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR,
                 "Error al enviar el mail");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiError);
 
+    }
+
+    // generica
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiError> handleUnknownException(Exception ex) {
+        ApiError apiError = new ApiError(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "Ha ocurrido un error inesperado. Contacte al administrador.");
+        ex.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiError);
     }
 
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,

@@ -2,6 +2,7 @@ package com.sanger.gymsan.services;
 
 import java.util.List;
 
+import org.hibernate.Session;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,6 +12,8 @@ import com.sanger.gymsan.records.cliente.MembresiaActivaDTO;
 import com.sanger.gymsan.records.cliente.UsuarioConMembresiaActivaDTO;
 import com.sanger.gymsan.repository.UserEntityRepository;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -18,9 +21,20 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class ClienteService {
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     private final UserEntityRepository usuarioRepository;
 
-    public List<UsuarioConMembresiaActivaDTO> listarClientesConMembresiaActiva() {
+    public List<UsuarioConMembresiaActivaDTO> listarClientesConMembresiaActiva(Boolean includeDeleted) {
+
+        Session session = entityManager.unwrap(Session.class);
+
+        if (!includeDeleted) {
+            session.enableFilter("deletedFilter").setParameter("isDeleted", false);
+        } else {
+            session.disableFilter("deletedFilter");
+        }
         List<Object[]> filas = usuarioRepository.findUsuariosClienteConMembresiaActiva();
 
         return filas.stream()

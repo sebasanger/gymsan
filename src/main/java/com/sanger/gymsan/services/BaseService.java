@@ -51,11 +51,25 @@ public abstract class BaseService<T, ID, R extends JpaRepository<T, ID>> {
     }
 
     public void delete(T t) {
-        repository.delete(t);
+        if (t instanceof SoftDeletableInterface softDeletable) {
+            softDeletable.setDeleted(true);
+            repository.save(t);
+        } else {
+            repository.delete(t);
+        }
+
     }
 
     public void deleteById(ID id) {
-        repository.deleteById(id);
+        T entity = this.findById(id)
+                .orElseThrow(EntityNotFoundException::new);
+
+        if (entity instanceof SoftDeletableInterface softDeletable) {
+            softDeletable.setDeleted(true);
+            repository.save(entity);
+        } else {
+            repository.delete(entity);
+        }
     }
 
     public Optional<T> findByIdIncludingDeleted(ID id) {
