@@ -1,6 +1,4 @@
-package com.sanger.gymsan.dto.user;
-
-import java.util.Set;
+package com.sanger.gymsan.dto.cliente;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -18,7 +16,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CreateUserDto {
+public class CreateClienteDto {
 
     private String avatar;
 
@@ -30,8 +28,7 @@ public class CreateUserDto {
     @Email()
     private String email;
 
-    @NotEmpty()
-    private Set<String> roles;
+    private Long membresiaId;
 
     @NotEmpty()
     private String documento;
