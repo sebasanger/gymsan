@@ -1,8 +1,10 @@
 package com.sanger.gymsan.services;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 import org.hibernate.Session;
@@ -17,14 +19,17 @@ import org.springframework.web.server.ResponseStatusException;
 import com.sanger.gymsan.dto.cliente.CreateClienteDto;
 import com.sanger.gymsan.dto.cliente.UpdateClienteDto;
 import com.sanger.gymsan.exceptions.UserNotFoundException;
+import com.sanger.gymsan.models.Membresia;
 import com.sanger.gymsan.models.MembresiaUsuario;
-import com.sanger.gymsan.models.Rol;
 import com.sanger.gymsan.models.Usuario;
 import com.sanger.gymsan.records.cliente.MembresiaActivaDTO;
 import com.sanger.gymsan.records.cliente.UsuarioConMembresiaActivaDTO;
+import com.sanger.gymsan.repository.MembresiaRepository;
+import com.sanger.gymsan.repository.MembresiaUsuarioRepository;
 import com.sanger.gymsan.repository.UserEntityRepository;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 
@@ -39,6 +44,10 @@ public class ClienteService {
     private final UserEntityRepository usuarioRepository;
 
     private final VerificationTokenService verificationTokenService;
+
+    private final MembresiaUsuarioRepository membresiaUsuarioRepository;
+
+    private final MembresiaRepository membresiaRepository;
 
     private final RolService rolService;
 
@@ -67,6 +76,20 @@ public class ClienteService {
 
         Usuario clienteSaved = usuarioRepository.save(cliente);
 
+        Membresia membresia = this.membresiaRepository.findById(newCliente.getMembresiaId())
+                .orElseThrow(() -> new EntityNotFoundException("Membresia no encontrada"));
+
+        Optional.ofNullable(membresia)
+                .ifPresent(m -> {
+                    MembresiaUsuario membresiaUsuario = new MembresiaUsuario();
+                    membresiaUsuario.setMembresia(membresia);
+                    membresiaUsuario.setUsuario(clienteSaved);
+                    membresiaUsuario.setDeleted(false);
+                    membresiaUsuario.setEnabled(true);
+                    membresiaUsuario.setFechaInscripcion(LocalDateTime.now());
+                    this.membresiaUsuarioRepository.save(membresiaUsuario);
+                });
+
         // verificationTokenService.sendEmailVerification(clienteSaved, this.urlFrontend
         // + "/" + this.activateUserPath);
 
@@ -81,7 +104,34 @@ public class ClienteService {
                     .orElseThrow(() -> new UserNotFoundException(updateClienteDto.getId()));
 
             modelMapper.map(updateClienteDto, cliente);
-            return this.usuarioRepository.save(cliente);
+            Usuario usuario = this.usuarioRepository.save(cliente);
+
+            Optional<MembresiaUsuario> activa = this.membresiaUsuarioRepository
+                    .findTopByUsuarioIdAndEnabledIsTrueOrderByIdDesc(updateClienteDto.getId());
+
+            Optional.ofNullable(updateClienteDto.getMembresiaId())
+                    .ifPresent(membresiaId -> {
+                        if (activa.isPresent() && !Objects.equals(activa.get().getMembresia().getId(), membresiaId)) {
+                            // se desactiva la membresia anterior
+                            MembresiaUsuario membresiaUsuarioAnterior = activa.get();
+                            membresiaUsuarioAnterior.setEnabled(false);
+                            this.membresiaUsuarioRepository.save(membresiaUsuarioAnterior);
+
+                            // se guarda la nueva membresia
+                            MembresiaUsuario newMembresiaUsuario = new MembresiaUsuario();
+                            Membresia membresia = membresiaRepository
+                                    .findById(membresiaId)
+                                    .orElseThrow(() -> new EntityNotFoundException("Membresia no encontrada"));
+                            newMembresiaUsuario.setMembresia(membresia);
+                            newMembresiaUsuario.setUsuario(cliente);
+                            newMembresiaUsuario.setDeleted(false);
+                            newMembresiaUsuario.setEnabled(true);
+                            newMembresiaUsuario.setFechaInscripcion(LocalDateTime.now());
+                            this.membresiaUsuarioRepository.save(newMembresiaUsuario);
+                        }
+                    });
+
+            return usuario;
 
         } catch (UserNotFoundException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El cliente no existe");
@@ -109,6 +159,7 @@ public class ClienteService {
 
                     if (mu != null) {
                         membresiaDto = new MembresiaActivaDTO(
+                                mu.getMembresia().getId(),
                                 mu.getId(),
                                 mu.getMembresia().getNombre(),
                                 mu.getFechaInscripcion(),
@@ -125,6 +176,37 @@ public class ClienteService {
                             membresiaDto);
                 })
                 .toList();
+    }
+
+    public UsuarioConMembresiaActivaDTO getById(Long id) {
+
+        Usuario usuario = this.usuarioRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado"));
+
+        MembresiaActivaDTO membresiaDto = null;
+
+        Optional<MembresiaUsuario> activa = this.membresiaUsuarioRepository
+                .findTopByUsuarioIdAndEnabledIsTrueOrderByIdDesc(id);
+
+        if (activa.isPresent()) {
+            MembresiaUsuario mu = activa.get();
+            membresiaDto = new MembresiaActivaDTO(
+                    mu.getMembresia().getId(),
+                    mu.getId(),
+                    mu.getMembresia().getNombre(),
+                    mu.getFechaInscripcion(),
+                    mu.getFechaVencimiento(),
+                    mu.getFechaUltimoPago());
+        }
+
+        return new UsuarioConMembresiaActivaDTO(
+                usuario.getId(),
+                usuario.getFullName(),
+                usuario.getDocumento(),
+                usuario.getEmail(),
+                usuario.getDeleted(),
+                membresiaDto);
+
     }
 
 }
