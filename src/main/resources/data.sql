@@ -27,13 +27,15 @@ values
 (2, 'Admin',"101010", 'admin@hotmail.com','admin@hotmail.com','$2a$10$DBJhFdEGTeAqoLLsGfXwYObYXpt/amU0wpsRtKQtwJdC5n.MOXgxC',CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false),
 (3, 'Gimnasio',"0", 'gimnasio@hotmail.com','gimnasio@hotmail.com','$2a$10$DBJhFdEGTeAqoLLsGfXwYObYXpt/amU0wpsRtKQtwJdC5n.MOXgxC',CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false),
 (4, 'Inactiva', "202020", 'inactiva@hotmail.com','inactiva@hotmail.com','$2a$10$DBJhFdEGTeAqoLLsGfXwYObYXpt/amU0wpsRtKQtwJdC5n.MOXgxC',CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, true),
-(5, 'User',"1", 'user@hotmail.com','user@hotmail.com','$2a$10$DBJhFdEGTeAqoLLsGfXwYObYXpt/amU0wpsRtKQtwJdC5n.MOXgxC',CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false);
+(5, 'User',"1", 'user@hotmail.com','user@hotmail.com','$2a$10$DBJhFdEGTeAqoLLsGfXwYObYXpt/amU0wpsRtKQtwJdC5n.MOXgxC',CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false),
+(6, 'Dissabled',"1021012", 'dissabled@hotmail.com','dissabled@hotmail.com','$2a$10$DBJhFdEGTeAqoLLsGfXwYObYXpt/amU0wpsRtKQtwJdC5n.MOXgxC',CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, false, false);
 
 insert into roles_usuarios (usuarios_id, roles_id) values (1,5);
 insert into roles_usuarios (usuarios_id, roles_id) values (2,1);
 insert into roles_usuarios (usuarios_id, roles_id) values (3,6);
 insert into roles_usuarios (usuarios_id, roles_id) values (4,5);
 insert into roles_usuarios (usuarios_id, roles_id) values (5,5);
+insert into roles_usuarios (usuarios_id, roles_id) values (6,5);
 -- USESRS --
 
 

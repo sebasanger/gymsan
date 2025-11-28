@@ -173,6 +173,7 @@ public class ClienteService {
                             u.getDocumento(),
                             u.getEmail(),
                             u.getDeleted(),
+                            u.getEnabled(),
                             membresiaDto);
                 })
                 .toList();
@@ -205,6 +206,7 @@ public class ClienteService {
                 usuario.getDocumento(),
                 usuario.getEmail(),
                 usuario.getDeleted(),
+                usuario.getEnabled(),
                 membresiaDto);
 
     }
