@@ -130,7 +130,8 @@ insert into videos_ejercicio (videos_id, ejercicios_id) values (1, 1);
 -- MEMBRESIAS --
 insert into membresias (id, nombre, precio, descripcion, cantidad_clases, deleted) values 
 (1, "Membresia estandar", 50000, "Membresia basica", 0, false),
-(2, "Membresia gold", 55000, "Membresia con adicional a 5 clases a inscribirse", 5, false);
+(2, "Membresia gold", 55000, "Membresia con adicional a 5 clases a inscribirse", 5, false),
+(3, "Membresia advanced", 53000, "Membresia avanzada", 8, false);
 -- MEMBRESIAS --
 
 -- MEMBRESIAS USUARIOS --
