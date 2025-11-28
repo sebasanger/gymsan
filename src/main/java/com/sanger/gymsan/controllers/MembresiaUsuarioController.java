@@ -32,4 +32,10 @@ public class MembresiaUsuarioController extends BaseController<MembresiaUsuario,
             @AuthenticationPrincipal Usuario user) {
         return ResponseEntity.status(HttpStatus.OK).body(membresiaUsuarioService.getAllMembresiasUsuariosByUserId(id));
     }
+
+    @GetMapping("/getAllByClient")
+    public ResponseEntity<?> getAllMembresiasUsuarioByUserId(@AuthenticationPrincipal Usuario user) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(membresiaUsuarioService.getAllMembresiasUsuariosByUserId(user.getId()));
+    }
 }
