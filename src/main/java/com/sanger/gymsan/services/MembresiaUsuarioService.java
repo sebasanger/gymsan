@@ -84,15 +84,28 @@ public class MembresiaUsuarioService extends BaseService<MembresiaUsuario, Long,
         Membresia membresia = this.membresiaRepository.findById(membresiaId)
                 .orElseThrow(() -> new EntityNotFoundException("Membresia  no encontrada"));
 
-        MembresiaUsuario nuevaMembresiaUsuario = new MembresiaUsuario();
+        Optional<MembresiaUsuario> currentMembresiaUsuario = this.repository.findByMembresiaIdAndUsuarioId(membresiaId,
+                user.getId());
 
-        nuevaMembresiaUsuario.setDeleted(false);
-        nuevaMembresiaUsuario.setEnabled(true);
-        nuevaMembresiaUsuario.setMembresia(membresia);
-        nuevaMembresiaUsuario.setFechaInscripcion(LocalDateTime.now());
-        nuevaMembresiaUsuario.setUsuario(user);
+        // si ya tiene una suscripcion a la membresia se activa nuevamente
+        if (currentMembresiaUsuario.isPresent()) {
+            MembresiaUsuario mu = currentMembresiaUsuario.get();
+            mu.setEnabled(true);
+            return this.repository.save(mu);
 
-        return this.repository.save(nuevaMembresiaUsuario);
+            // si no tiene una suscripcion a la membresia se genera una nueva
+        } else {
+
+            MembresiaUsuario nuevaMembresiaUsuario = new MembresiaUsuario();
+
+            nuevaMembresiaUsuario.setDeleted(false);
+            nuevaMembresiaUsuario.setEnabled(true);
+            nuevaMembresiaUsuario.setMembresia(membresia);
+            nuevaMembresiaUsuario.setFechaInscripcion(LocalDateTime.now());
+            nuevaMembresiaUsuario.setUsuario(user);
+
+            return this.repository.save(nuevaMembresiaUsuario);
+        }
 
     }
 }
