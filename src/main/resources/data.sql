@@ -143,13 +143,15 @@ insert into membresias_usuarios (id, membresias_id, usuarios_id, fecha_inscripci
 
 -- PAGOS --
 insert into pagos (id, fecha, monto, transaction, aceptada, descripcion) values 
-(1, CURRENT_TIMESTAMP, 50000, "kjkszpj", true, "pago de la mensualidad"),
-(2, CURRENT_TIMESTAMP, 55000, "kjkszpj", true, "pago de la mensualidad e inscripcion");
+(1, DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 30 DAY), 50000, "kjkszpj", true, "pago de la mensualidad e inscripcion"),
+(2, CURRENT_TIMESTAMP, 55000, "kjkszpj", true, "pago de la mensualidad e inscripcion"),
+(3, CURRENT_TIMESTAMP, 55000, "asdw", true, "pago de la mensualidad");
 -- PAGOS --
 
 -- PAGOS MEMBRESIAS --
 insert into pagos_membresias (membresias_usuarios_id, pagos_id) values (1, 1);
 insert into pagos_membresias (membresias_usuarios_id, pagos_id) values (2, 2);
+insert into pagos_membresias (membresias_usuarios_id, pagos_id) values (1, 3);
 -- PAGOS MEMBRESIAS --
 
 

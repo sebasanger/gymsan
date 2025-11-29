@@ -77,6 +77,7 @@ public class MembresiaUsuario implements SoftDeletableInterface {
     }
 
     @ManyToMany(mappedBy = "membresiasUsuarios")
+    @JsonManagedReference
     @JsonIgnore
     private Set<Pago> pagos;
 

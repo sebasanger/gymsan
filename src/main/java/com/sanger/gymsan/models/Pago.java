@@ -2,6 +2,9 @@ package com.sanger.gymsan.models;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.time.LocalDateTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -41,11 +44,8 @@ public class Pago {
     private String descripcion;
 
     @ManyToMany
-    @JoinTable(
-            name = "pagos_membresias",
-            joinColumns = @JoinColumn(name = "pagos_id"),
-            inverseJoinColumns = @JoinColumn(name = "membresias_usuarios_id")
-    )
+    @JoinTable(name = "pagos_membresias", joinColumns = @JoinColumn(name = "pagos_id"), inverseJoinColumns = @JoinColumn(name = "membresias_usuarios_id"))
+    @JsonBackReference
     private Set<MembresiaUsuario> membresiasUsuarios;
 
 }
