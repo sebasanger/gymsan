@@ -20,8 +20,10 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.sanger.gymsan.exceptions.EntitiesNotFoundException;
 import com.sanger.gymsan.exceptions.FindEntityByIdNotFoundException;
+import com.sanger.gymsan.exceptions.MembresiaAlreadySucribedException;
 import com.sanger.gymsan.exceptions.MembresiaNoVigenteException;
 import com.sanger.gymsan.exceptions.MembresiaNotEncontradaException;
+import com.sanger.gymsan.exceptions.MembresiaNotSucribedException;
 import com.sanger.gymsan.exceptions.NewUserWithDifferentPasswordsException;
 import com.sanger.gymsan.exceptions.PasswordNotMismatch;
 import com.sanger.gymsan.exceptions.SearchEntityNoResultException;
@@ -58,7 +60,8 @@ public class GlobalControllerAdvice extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
     }
 
-    @ExceptionHandler({ UltimoCheckInNoRegistradoException.class, UserCantUpdateRutinaException.class })
+    @ExceptionHandler({ UltimoCheckInNoRegistradoException.class, UserCantUpdateRutinaException.class,
+            MembresiaNotSucribedException.class, MembresiaAlreadySucribedException.class })
     public ResponseEntity<ApiError> checkInOutExceptionsHandling(Exception ex) {
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);

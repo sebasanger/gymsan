@@ -3,8 +3,10 @@ package com.sanger.gymsan.controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,5 +39,19 @@ public class MembresiaUsuarioController extends BaseController<MembresiaUsuario,
     public ResponseEntity<?> getAllMembresiasUsuarioByUserId(@AuthenticationPrincipal Usuario user) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(membresiaUsuarioService.getAllMembresiasUsuariosByUserId(user.getId()));
+    }
+
+    @PostMapping("/suscribe/{membresiaId}")
+    public ResponseEntity<?> suscribe(@PathVariable Long membresiaId,
+            @AuthenticationPrincipal Usuario user) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .body(membresiaUsuarioService.suscribe(membresiaId, user));
+    }
+
+    @DeleteMapping("/unsuscribe/{membresiaUsuarioId}")
+    public ResponseEntity<?> unsuscribe(@PathVariable Long membresiaUsuarioId,
+            @AuthenticationPrincipal Usuario user) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .body(membresiaUsuarioService.unsuscribe(membresiaUsuarioId, user));
     }
 }
