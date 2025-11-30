@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,9 +44,9 @@ public class Pago {
     @Column(length = 255)
     private String descripcion;
 
-    @ManyToMany
-    @JoinTable(name = "pagos_membresias", joinColumns = @JoinColumn(name = "pagos_id"), inverseJoinColumns = @JoinColumn(name = "membresias_usuarios_id"))
+    @ManyToOne
+    @JoinColumn(name = "membresia_usuario_id")
     @JsonBackReference
-    private Set<MembresiaUsuario> membresiasUsuarios;
+    private MembresiaUsuario membresiaUsuario;
 
 }

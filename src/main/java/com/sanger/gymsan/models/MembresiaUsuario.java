@@ -21,6 +21,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -76,8 +77,7 @@ public class MembresiaUsuario implements SoftDeletableInterface {
         this.deleted = deleted;
     }
 
-    @ManyToMany(mappedBy = "membresiasUsuarios")
-    @JsonManagedReference
+    @OneToMany(mappedBy = "membresiaUsuario")
     @JsonIgnore
     private Set<Pago> pagos;
 

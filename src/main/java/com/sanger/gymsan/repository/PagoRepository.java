@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.sanger.gymsan.models.Pago;
 
 public interface PagoRepository extends JpaRepository<Pago, Long> {
-    List<Pago> findByMembresiasUsuarios_Id(Long membresiaId);
+    List<Pago> findByMembresiaUsuario_Id(Long membresiaId);
 }
