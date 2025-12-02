@@ -16,6 +16,8 @@ public interface MembresiaUsuarioRepository extends JpaRepository<MembresiaUsuar
 
     Optional<MembresiaUsuario> findByUsuarioDocumentoAndEnabledTrue(String documento);
 
+    List<MembresiaUsuario> findByEnabledIsTrueOrderByIdDesc();
+
     Optional<MembresiaUsuario> findTopByUsuarioIdAndEnabledIsTrueOrderByIdDesc(Long usuarioId);
 
     List<MembresiaUsuario> findByUsuarioId(Long usuarioId);

@@ -27,6 +27,10 @@ public class MembresiaUsuarioService extends BaseService<MembresiaUsuario, Long,
 
     private final MembresiaRepository membresiaRepository;
 
+    public List<MembresiaUsuario> getAllMembresiasUsuariosActivas() {
+        return this.repository.findByEnabledIsTrueOrderByIdDesc();
+    }
+
     public MembresiaUsuario getMembresiaByDocumento(String documento) {
         MembresiaUsuario membresiaUsuario = this.repository.findByUsuarioDocumentoAndEnabledTrue(documento)
                 .orElseThrow(() -> new MembresiaNotEncontradaException());

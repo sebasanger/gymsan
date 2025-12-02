@@ -35,6 +35,11 @@ public class MembresiaUsuarioController extends BaseController<MembresiaUsuario,
                 .body(membresiaUsuarioService.getMembresiaByDocumento(user.getDocumento()));
     }
 
+    @GetMapping("/getAllActive")
+    public ResponseEntity<?> getAllActiveMembresias(@AuthenticationPrincipal Usuario user) {
+        return ResponseEntity.status(HttpStatus.OK).body(membresiaUsuarioService.getAllMembresiasUsuariosActivas());
+    }
+
     @GetMapping("/getAllByClient/id/{id}")
     public ResponseEntity<?> getAllMembresiasUsuarioByUserId(@PathVariable(required = true) Long id,
             @AuthenticationPrincipal Usuario user) {
