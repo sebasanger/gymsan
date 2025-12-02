@@ -2,6 +2,7 @@ package com.sanger.gymsan.services;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
@@ -44,10 +45,40 @@ public class PagoService extends BaseService<Pago, Long, PagoRepository> {
         pago.setDescripcion("Pago de: " + membresiaUsuario.getMembresia().getNombre());
         pago.setAceptada(Boolean.TRUE);
 
+        Optional.ofNullable(membresiaUsuario.getMembresia().getCantidadDias())
+                .ifPresent(cantidadDias -> {
+                    LocalDateTime fechaVencimiento = membresiaUsuario.getFechaVencimiento();
+                    LocalDateTime nuevaFecha = fechaVencimiento.plusDays(cantidadDias);
+                    membresiaUsuario.setFechaVencimiento(nuevaFecha);
+                    this.membresiaUsuarioRepository.save(membresiaUsuario);
+                });
+
         // actualizacion de la membresia del usuario
         membresiaUsuario.setFechaUltimoPago(LocalDateTime.now());
         membresiaUsuarioRepository.save(membresiaUsuario);
 
         return this.pagoRepository.save(pago);
+    }
+
+    public MembresiaUsuario eliminarPago(Long pagoId, Usuario user) {
+
+        Pago pago = this.repository
+                .findById(pagoId).orElseThrow(() -> new RuntimeException("Pago no existe"));
+
+        MembresiaUsuario membresiaUsuario = membresiaUsuarioRepository
+                .findById(pago.getMembresiaUsuario().getId())
+                .orElseThrow(() -> new RuntimeException("Membresia usuario no existe"));
+
+        Optional.ofNullable(pago.getMembresiaUsuario().getMembresia().getCantidadDias())
+                .ifPresent(cantidadDias -> {
+                    LocalDateTime fechaVencimiento = membresiaUsuario.getFechaVencimiento();
+                    LocalDateTime nuevaFecha = fechaVencimiento.minusDays(cantidadDias);
+                    membresiaUsuario.setFechaVencimiento(nuevaFecha);
+                    this.membresiaUsuarioRepository.save(membresiaUsuario);
+                });
+
+        this.pagoRepository.delete(pago);
+
+        return membresiaUsuario;
     }
 }

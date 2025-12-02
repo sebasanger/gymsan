@@ -42,6 +42,9 @@ public class Membresia implements SoftDeletableInterface {
 
     private Double precio;
 
+    @Column(name = "cantidad_dias", columnDefinition = "int default 30")
+    private Integer cantidadDias;
+
     private Boolean deleted;
 
     @Override
