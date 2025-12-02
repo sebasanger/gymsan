@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sanger.gymsan.dto.auth.ChangeUserPassword;
+import com.sanger.gymsan.dto.auth.CreateUserClientDto;
 import com.sanger.gymsan.dto.user.CheckEmailIsValidDto;
 import com.sanger.gymsan.dto.user.CreateUserDto;
 import com.sanger.gymsan.dto.user.GetUserDetailsDto;
@@ -86,6 +87,12 @@ public class UserController {
     public ResponseEntity<GetUsersDto> newUser(@Valid @RequestBody CreateUserDto newUser) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(userDtoConverter.convertUserEntityToGetUserDto(userEntityService.newUser(newUser)));
+    }
+
+    @PostMapping("/createClient")
+    public ResponseEntity<GetUsersDto> newUser(@Valid @RequestBody CreateUserClientDto newUser) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(userDtoConverter.convertUserEntityToGetUserDto(userEntityService.newUserClient(newUser)));
     }
 
     @PutMapping("update")

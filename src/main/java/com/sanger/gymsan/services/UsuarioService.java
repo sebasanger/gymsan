@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.sanger.gymsan.dto.auth.ChangeUserPassword;
+import com.sanger.gymsan.dto.auth.CreateUserClientDto;
 import com.sanger.gymsan.dto.user.CheckEmailIsValidDto;
 import com.sanger.gymsan.dto.user.CreateUserDto;
 import com.sanger.gymsan.dto.user.UpdateAcountDto;
@@ -76,8 +77,22 @@ public class UsuarioService extends BaseService<Usuario, Long, UserEntityReposit
 
         Usuario userEntity = userDtoConverter.convertCreateUserDtoToUserEntity(newUser);
         Usuario userSaved = save(userEntity);
+        // TODO: Reactivar validacion por mail
+        // verificationTokenService.sendEmailVerification(userSaved, this.urlFrontend +
+        // "/" + this.activateUserPath);
 
-        verificationTokenService.sendEmailVerification(userSaved, this.urlFrontend + "/" + this.activateUserPath);
+        return userSaved;
+
+    }
+
+    public Usuario newUserClient(CreateUserClientDto newUser) {
+
+        Usuario userEntity = userDtoConverter.convertCreateUserClientDtoToUserEntity(newUser);
+        Usuario userSaved = save(userEntity);
+
+        // TODO: Reactivar validacion por mail
+        // verificationTokenService.sendEmailVerification(userSaved, this.urlFrontend +
+        // "/" + this.activateUserPath);
 
         return userSaved;
 

@@ -162,6 +162,8 @@ public class ClienteService {
                                 mu.getMembresia().getId(),
                                 mu.getId(),
                                 mu.getMembresia().getNombre(),
+                                mu.getMembresia().getDescripcion(),
+                                mu.getMembresia().getPrecio(),
                                 mu.getFechaInscripcion(),
                                 mu.getFechaVencimiento(),
                                 mu.getFechaUltimoPago());
@@ -195,6 +197,8 @@ public class ClienteService {
                     mu.getMembresia().getId(),
                     mu.getId(),
                     mu.getMembresia().getNombre(),
+                    mu.getMembresia().getDescripcion(),
+                    mu.getMembresia().getPrecio(),
                     mu.getFechaInscripcion(),
                     mu.getFechaVencimiento(),
                     mu.getFechaUltimoPago());

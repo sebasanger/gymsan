@@ -1,5 +1,7 @@
 package com.sanger.gymsan.dto.user;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -7,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.sanger.gymsan.dto.auth.CreateUserClientDto;
 import com.sanger.gymsan.models.Rol;
 import com.sanger.gymsan.models.Usuario;
 import com.sanger.gymsan.services.RolService;
@@ -30,15 +33,29 @@ public class UserDtoConverter {
 
     public GetUserDetailsDto convertUserEntityToGetUserDetailsDto(Usuario user) {
         return GetUserDetailsDto.builder().id(user.getId()).fullName(user.getFullName())
-                .email(user.getEmail()).enabled(user.isEnabled()).deleted(user.getDeleted()).documento(user.getDocumento())
+                .email(user.getEmail()).enabled(user.isEnabled()).deleted(user.getDeleted())
+                .documento(user.getDocumento())
                 .createdAt(user.getCreatedAt()).lastPasswordChangeAt(user.getLastPasswordChangeAt())
                 .roles(user.getRoles().stream().map(Rol::getRol).collect(Collectors.toSet())).build();
     }
 
     public Usuario convertCreateUserDtoToUserEntity(CreateUserDto newUser) {
         return Usuario.builder()
-                .password(passwordEncoder.encode("myPasswordEncoded12313123")).enabled(false).deleted(false).documento(newUser.getDocumento())
-                .fullName(newUser.getFullName()).email(newUser.getEmail()).roles(rolService.getAllRolesFromStrings(newUser.getRoles())).build();
+                .password(passwordEncoder.encode("myPasswordEncoded12313123")).enabled(false).deleted(false)
+                .documento(newUser.getDocumento()).username(newUser.getEmail())
+                .fullName(newUser.getFullName()).email(newUser.getEmail())
+                .roles(rolService.getAllRolesFromStrings(newUser.getRoles())).build();
+    }
+
+    public Usuario convertCreateUserClientDtoToUserEntity(CreateUserClientDto newUser) {
+        Set<String> roles = new HashSet<>();
+        roles.add("CLIENTE");
+
+        return Usuario.builder()
+                .password(passwordEncoder.encode("myPasswordEncoded12313123")).enabled(false).deleted(false)
+                .documento(newUser.getDocumento())
+                .fullName(newUser.getFullName()).email(newUser.getEmail()).username(newUser.getEmail())
+                .roles(rolService.getAllRolesFromStrings(roles)).build();
     }
 
     public Usuario convertUpdateUserDtoToUserEntity(UpdateUserDto user) {

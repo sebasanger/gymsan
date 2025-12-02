@@ -49,14 +49,15 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(authenticationEntryPoint))
                 .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/login", "/auth/logout", "/auth/refresh/token",
-                        "/reset-password/**", "/auth/validate-acount/**",
-                        "/actuator/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/files/**").permitAll()
-                .requestMatchers("/user/changePassword").permitAll()
-                .requestMatchers("/user/**").hasRole("ADMIN")
-                .anyRequest().authenticated()
-                );
+                        .requestMatchers("/auth/login", "/auth/logout", "/auth/refresh/token",
+                                "/reset-password/**", "/auth/validate-acount/**",
+                                "/actuator/**")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.GET, "/files/**").permitAll()
+                        .requestMatchers("/user/changePassword").permitAll()
+                        .requestMatchers("/user/createClient").permitAll()
+                        .requestMatchers("/user/**").hasRole("ADMIN")
+                        .anyRequest().authenticated());
 
         http.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
 
