@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -103,14 +104,17 @@ public class UserController {
     }
 
     @PutMapping("/update-acount")
-    public ResponseEntity<GetUsersDto> updateAcount(@Valid @RequestBody UpdateAcountDto user) {
+    public ResponseEntity<GetUsersDto> updateAcount(@Valid @RequestBody UpdateAcountDto user,
+            @AuthenticationPrincipal Usuario currentUser) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(userDtoConverter.convertUserEntityToGetUserDto(userEntityService.updateAcount(user)));
+                .body(userDtoConverter
+                        .convertUserEntityToGetUserDto(userEntityService.updateAcount(user, currentUser)));
 
     }
 
     @PutMapping("/changePassword")
-    public ResponseEntity<GetUsersDto> updateUser(@Valid @RequestBody ChangeUserPassword user) {
+    public ResponseEntity<GetUsersDto> updateUser(@Valid @RequestBody ChangeUserPassword user,
+            @AuthenticationPrincipal Usuario currentUser) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(userDtoConverter.convertUserEntityToGetUserDto(userEntityService.updatePassword(user)));
     }

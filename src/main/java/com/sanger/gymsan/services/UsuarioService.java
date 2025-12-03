@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.hibernate.Session;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,6 +43,9 @@ public class UsuarioService extends BaseService<Usuario, Long, UserEntityReposit
     private final VerificationTokenService verificationTokenService;
 
     private final RolService rolService;
+
+    @Autowired
+    private final ModelMapper modelMapper;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -113,12 +118,12 @@ public class UsuarioService extends BaseService<Usuario, Long, UserEntityReposit
 
     }
 
-    public Usuario updateAcount(UpdateAcountDto updateAcountDto) {
+    public Usuario updateAcount(UpdateAcountDto updateAcountDto, Usuario user) {
 
         try {
-            Usuario userEntity = findById(updateAcountDto.getId()).orElseThrow(() -> new UserNotFoundException());
+            Usuario userEntity = findById(user.getId()).orElseThrow(() -> new UserNotFoundException());
 
-            userEntity.setEmail(updateAcountDto.getEmail());
+            modelMapper.map(updateAcountDto, userEntity);
             return update(userEntity);
         } catch (Exception ex) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());

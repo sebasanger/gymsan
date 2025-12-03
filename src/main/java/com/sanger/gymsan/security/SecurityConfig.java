@@ -56,6 +56,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/files/**").permitAll()
                         .requestMatchers("/user/changePassword").permitAll()
                         .requestMatchers("/user/createClient").permitAll()
+                        .requestMatchers("/user/update-acount").permitAll()
                         .requestMatchers("/user/**").hasRole("ADMIN")
                         .anyRequest().authenticated());
 
