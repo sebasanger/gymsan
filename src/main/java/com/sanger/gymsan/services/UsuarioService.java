@@ -131,8 +131,9 @@ public class UsuarioService extends BaseService<Usuario, Long, UserEntityReposit
 
     }
 
-    public Usuario updatePassword(ChangeUserPassword user) throws UserNotFoundException {
-        Usuario userEntity = findById(user.getId()).orElseThrow(() -> new UserNotFoundException(user.getId()));
+    public Usuario updatePassword(ChangeUserPassword user, Usuario currentUser) throws UserNotFoundException {
+        Usuario userEntity = findById(currentUser.getId())
+                .orElseThrow(() -> new UserNotFoundException(currentUser.getId()));
 
         if (!passwordEncoder.matches(user.getOldPassword(), userEntity.getPassword())) {
             throw new PasswordNotMismatch(true);

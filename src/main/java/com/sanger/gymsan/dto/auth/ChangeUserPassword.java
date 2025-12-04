@@ -14,7 +14,6 @@ import lombok.Setter;
 @Builder
 public class ChangeUserPassword {
 
-    private Long id;
     @NotBlank
     private String oldPassword;
     @NotBlank

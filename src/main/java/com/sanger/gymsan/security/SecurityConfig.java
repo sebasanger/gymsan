@@ -54,9 +54,9 @@ public class SecurityConfig {
                                 "/actuator/**")
                         .permitAll()
                         .requestMatchers(HttpMethod.GET, "/files/**").permitAll()
-                        .requestMatchers("/user/changePassword").permitAll()
+                        .requestMatchers("/user/changePassword").authenticated()
                         .requestMatchers("/user/createClient").permitAll()
-                        .requestMatchers("/user/update-acount").permitAll()
+                        .requestMatchers("/user/update-acount").authenticated()
                         .requestMatchers("/user/**").hasRole("ADMIN")
                         .anyRequest().authenticated());
 
