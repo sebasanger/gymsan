@@ -50,12 +50,6 @@ public class UsuarioService extends BaseService<Usuario, Long, UserEntityReposit
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Value("${base.url.frontend}")
-    private String urlFrontend;
-
-    @Value("${redirect.path.active.user}")
-    private String activateUserPath;
-
     public Optional<Usuario> findUserByUsername(String username) {
         return this.repository.findByUsername(username);
     }
@@ -82,9 +76,7 @@ public class UsuarioService extends BaseService<Usuario, Long, UserEntityReposit
 
         Usuario userEntity = userDtoConverter.convertCreateUserDtoToUserEntity(newUser);
         Usuario userSaved = save(userEntity);
-        // TODO: Reactivar validacion por mail
-        // verificationTokenService.sendEmailVerification(userSaved, this.urlFrontend +
-        // "/" + this.activateUserPath);
+        verificationTokenService.sendEmailVerification(userSaved);
 
         return userSaved;
 
@@ -95,9 +87,7 @@ public class UsuarioService extends BaseService<Usuario, Long, UserEntityReposit
         Usuario userEntity = userDtoConverter.convertCreateUserClientDtoToUserEntity(newUser);
         Usuario userSaved = save(userEntity);
 
-        // TODO: Reactivar validacion por mail
-        // verificationTokenService.sendEmailVerification(userSaved, this.urlFrontend +
-        // "/" + this.activateUserPath);
+        verificationTokenService.sendEmailVerification(userSaved);
 
         return userSaved;
 

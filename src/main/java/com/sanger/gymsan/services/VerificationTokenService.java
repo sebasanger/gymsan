@@ -50,9 +50,12 @@ public class VerificationTokenService extends BaseService<VerificationToken, Lon
      */
     public void sendEmailVerification(Usuario user) {
         String token = createVerificationTokenForUser(user);
-        emailService.sendMail(user.getEmail(), user.getFullName(),
-                "Bienvenido " + user.getFullName() + "  sigue el siguiente link para activar tu cuenta " + urlFrontend
-                        + activateUserPath + token);
+
+        // TODO: Reactivar validacion por mail
+        // emailService.sendMail(user.getEmail(), user.getFullName(),
+        // "Bienvenido " + user.getFullName() + " sigue el siguiente link para activar
+        // tu cuenta " + urlFrontend
+        // + activateUserPath + token);
     }
 
     public String createVerificationTokenForUser(Usuario user) {
