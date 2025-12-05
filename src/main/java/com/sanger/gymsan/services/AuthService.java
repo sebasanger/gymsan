@@ -29,58 +29,57 @@ import lombok.AllArgsConstructor;
 @Transactional
 public class AuthService {
 
-    private final RefreshTokenService refreshTokenService;
-    private final VerificationTokenService verificationTokenService;
-    private final UserEntityRepository userRepository;
-    private final AuthenticationManager authenticationManager;
-    private final UserDtoConverter userDtoConverter;
-    private final JwtProvider jwtProvider;
+        private final RefreshTokenService refreshTokenService;
+        private final VerificationTokenService verificationTokenService;
+        private final UserEntityRepository userRepository;
+        private final AuthenticationManager authenticationManager;
+        private final UserDtoConverter userDtoConverter;
+        private final JwtProvider jwtProvider;
 
-    @Transactional(readOnly = true)
-    public Usuario getCurrentUser() {
-        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder
-                .getContext().getAuthentication().getPrincipal();
-        return userRepository.findByUsername(principal.getUsername()).orElseThrow(
-                () -> new UsernameNotFoundException("User not found - " + principal.getUsername()));
-    }
-
-    public RefreshTokenResponse refreshToken(RefreshTokenRequestDto refreshTokenRequest) {
-        refreshTokenService.validateRefreshToken(refreshTokenRequest.getRefreshToken());
-        Usuario user = userRepository.findByEmail(refreshTokenRequest.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        String token = jwtProvider.generateTokenWithEmail(user);
-        return RefreshTokenResponse.builder().authenticationToken(token)
-                .refreshToken(refreshTokenRequest.getRefreshToken())
-                .user(userDtoConverter.convertUserEntityToGetUserDetailsDto(user))
-                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtDurationToken())).build();
-    }
-
-    public AuthenticationResponse login(LoginRequestDto loginRequest) {
-        Usuario user = userRepository.findByEmail(loginRequest.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        Authentication authenticate = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),
-                        loginRequest.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authenticate);
-        String token = jwtProvider.generateToken(authenticate);
-        return AuthenticationResponse.builder().authenticationToken(token)
-                .refreshToken(refreshTokenService.generateRefreshToken().getToken())
-                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtDurationToken()))
-                .user(userDtoConverter.convertUserEntityToGetUserDetailsDto(user)).build();
-    }
-
-    public boolean isLoggedIn() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
-    }
-
-    public void resendEmailVerification(ResendEmailVerificationDto resendEmailVerificationDto) {
-        Usuario user = userRepository.findById(resendEmailVerificationDto.getId())
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
-        if (!user.isEnabled()) {
-            verificationTokenService.sendEmailVerification(user,
-                    resendEmailVerificationDto.getUrlRedirect());
+        @Transactional(readOnly = true)
+        public Usuario getCurrentUser() {
+                org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder
+                                .getContext().getAuthentication().getPrincipal();
+                return userRepository.findByUsername(principal.getUsername()).orElseThrow(
+                                () -> new UsernameNotFoundException("User not found - " + principal.getUsername()));
         }
 
-    }
+        public RefreshTokenResponse refreshToken(RefreshTokenRequestDto refreshTokenRequest) {
+                refreshTokenService.validateRefreshToken(refreshTokenRequest.getRefreshToken());
+                Usuario user = userRepository.findByEmail(refreshTokenRequest.getEmail())
+                                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                String token = jwtProvider.generateTokenWithEmail(user);
+                return RefreshTokenResponse.builder().authenticationToken(token)
+                                .refreshToken(refreshTokenRequest.getRefreshToken())
+                                .user(userDtoConverter.convertUserEntityToGetUserDetailsDto(user))
+                                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtDurationToken())).build();
+        }
+
+        public AuthenticationResponse login(LoginRequestDto loginRequest) {
+                Usuario user = userRepository.findByEmail(loginRequest.getEmail())
+                                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                Authentication authenticate = authenticationManager
+                                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),
+                                                loginRequest.getPassword()));
+                SecurityContextHolder.getContext().setAuthentication(authenticate);
+                String token = jwtProvider.generateToken(authenticate);
+                return AuthenticationResponse.builder().authenticationToken(token)
+                                .refreshToken(refreshTokenService.generateRefreshToken().getToken())
+                                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtDurationToken()))
+                                .user(userDtoConverter.convertUserEntityToGetUserDetailsDto(user)).build();
+        }
+
+        public boolean isLoggedIn() {
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                return !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
+        }
+
+        public void resendEmailVerification(ResendEmailVerificationDto resendEmailVerificationDto) {
+                Usuario user = userRepository.findById(resendEmailVerificationDto.getId())
+                                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+                if (!user.isEnabled()) {
+                        verificationTokenService.sendEmailVerification(user);
+                }
+
+        }
 }

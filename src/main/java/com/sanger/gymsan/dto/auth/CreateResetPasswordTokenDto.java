@@ -16,9 +16,6 @@ import lombok.Setter;
 public class CreateResetPasswordTokenDto {
 
     @NotBlank
-    private String urlRedirect;
-
-    @NotBlank
     @Email
     private String email;
 }

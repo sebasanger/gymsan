@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.modelmapper.internal.bytebuddy.utility.RandomString;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +35,12 @@ public class ResetPasswordTokenService extends BaseService<PasswordResetToken, L
     public static final String TOKEN_EXPIRED = "expired";
     public static final String TOKEN_VALID = "valid";
 
+    @Value("${base.url.frontend}")
+    private String urlFrontend;
+
+    @Value("${redirect.path.recover.password}")
+    private String recoverPasswordPath;
+
     /**
      * sirve para generar el mail que se le envia al usuario resetear la
      * contraseña
@@ -42,11 +49,15 @@ public class ResetPasswordTokenService extends BaseService<PasswordResetToken, L
      * @param urlRedirect
      * @return
      */
-    public void sendEmailResetToken(String email, String urlRedirect) {
+    public void sendEmailResetToken(String email) {
         Usuario user = userEntityRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException());
         String token = createVerificationTokenForUser(user);
-        emailService.sendMail(user.getEmail(), user.getFullName(), "Welcome " + user.getFullName()
-                + " follow this link to reset your password " + urlRedirect + "?tokenuid=" + token);
+        System.out.println(urlFrontend + recoverPasswordPath + token);
+        // TODO: Activar esto nuevamente
+        // emailService.sendMail(user.getEmail(), user.getFullName(), "Bienvenido " +
+        // user.getFullName()
+        // + " , sigue este link para resetear to contraseña " + urlFrontend +
+        // recoverPasswordPath + token);
     }
 
     public String createVerificationTokenForUser(Usuario user) {

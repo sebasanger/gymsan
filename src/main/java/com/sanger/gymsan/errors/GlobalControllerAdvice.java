@@ -27,6 +27,7 @@ import com.sanger.gymsan.exceptions.MembresiaNotSucribedException;
 import com.sanger.gymsan.exceptions.NewUserWithDifferentPasswordsException;
 import com.sanger.gymsan.exceptions.PasswordNotMismatch;
 import com.sanger.gymsan.exceptions.SearchEntityNoResultException;
+import com.sanger.gymsan.exceptions.TokenInvalidException;
 import com.sanger.gymsan.exceptions.UltimoCheckInNoRegistradoException;
 import com.sanger.gymsan.exceptions.UserCantUpdateRutinaException;
 import com.sanger.gymsan.exceptions.UserNotFoundException;
@@ -48,7 +49,8 @@ public class GlobalControllerAdvice extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
     }
 
-    @ExceptionHandler({ NewUserWithDifferentPasswordsException.class, PasswordNotMismatch.class, })
+    @ExceptionHandler({ NewUserWithDifferentPasswordsException.class, PasswordNotMismatch.class,
+            TokenInvalidException.class })
     public ResponseEntity<ApiError> handleBadRequest(Exception ex) {
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);

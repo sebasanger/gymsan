@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,7 +31,7 @@ public class PasswordResetToken {
 
     private String token;
 
-    @OneToOne(targetEntity = Usuario.class, fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity = Usuario.class, fetch = FetchType.EAGER)
     @JoinColumn()
     private Usuario user;
 

@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.modelmapper.internal.bytebuddy.utility.RandomString;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +34,12 @@ public class VerificationTokenService extends BaseService<VerificationToken, Lon
 
     private final PasswordEncoder passwordEncoder;
 
+    @Value("${base.url.frontend}")
+    private String urlFrontend;
+
+    @Value("${redirect.path.active.user}")
+    private String activateUserPath;
+
     /**
      * sirve para generar el mail que se le envia al usuario para activar su
      * cuenta y ponerle una contraseña
@@ -41,10 +48,11 @@ public class VerificationTokenService extends BaseService<VerificationToken, Lon
      * @param urlRedirect
      * @return
      */
-    public void sendEmailVerification(Usuario user, String urlRedirect) {
+    public void sendEmailVerification(Usuario user) {
         String token = createVerificationTokenForUser(user);
         emailService.sendMail(user.getEmail(), user.getFullName(),
-                "Welcome " + user.getFullName() + " follow this link to activate your acount " + urlRedirect + token);
+                "Bienvenido " + user.getFullName() + "  sigue el siguiente link para activar tu cuenta " + urlFrontend
+                        + activateUserPath + token);
     }
 
     public String createVerificationTokenForUser(Usuario user) {
