@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -58,6 +59,13 @@ public class ProgresoRutinaController extends BaseController<ProgresoRutina, Lon
     @GetMapping("/own")
     public ResponseEntity<?> getOwnProgresosRutinas(@AuthenticationPrincipal Usuario user) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(progresoRutinaService.getAllRutinasConProgreso(user));
+    }
+
+    @GetMapping("/rutina/{id}")
+    public ResponseEntity<?> getProgresosRutinasByRutinaIdOfCurrentUser(@PathVariable(required = true) Long id,
+            @AuthenticationPrincipal Usuario user) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .body(progresoRutinaService.getAllRutinasProgresosByRutinaIdForCurrentUser(id, user));
     }
 
     @GetMapping("/activas/count")

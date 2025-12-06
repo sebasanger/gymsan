@@ -270,4 +270,82 @@ public class ProgresoRutinaService extends BaseService<ProgresoRutina, Long, Pro
                 return this.repository.countByCheckOutIsNull();
         }
 
+        public Set<RutinaConProgresoDto> getAllRutinasProgresosByRutinaIdForCurrentUser(Long rutinaId, Usuario user) {
+
+                // Obtener todas las rutinas del usuario con checkOut no nulo
+                Set<ProgresoRutina> progresosRutinas = repository
+                                .findByUsuarioIdAndCheckOutIsNotNullOrderByCheckInDesc(user.getId());
+
+                if (progresosRutinas.isEmpty()) {
+                        return Collections.emptySet();
+                }
+
+                // Iterar sobre cada ProgresoRutina y mapear a RutinaConProgresoDto
+                return progresosRutinas.stream().map(progresoRutina -> {
+
+                        // Si no tiene entrenamiento
+                        if (progresoRutina.getEntrenamiento() == null) {
+                                return RutinaConProgresoDto.builder()
+                                                .id(progresoRutina.getId())
+                                                .fecha(progresoRutina.getFecha())
+                                                .checkIn(progresoRutina.getCheckIn())
+                                                .checkOut(progresoRutina.getCheckOut())
+                                                .build();
+                        }
+
+                        // Obtener el entrenamiento completo
+                        Entrenamiento entrenamiento = entrenamientoService.findById(
+                                        progresoRutina.getEntrenamiento().getId())
+                                        .orElseThrow(() -> new EntityNotFoundException("Entrenamiento no encontrado"));
+
+                        Set<EjercicioEntrenamiento> ejercicios = Optional
+                                        .ofNullable(entrenamiento.getEjerciciosEntrenamientos())
+                                        .orElse(Collections.emptySet());
+
+                        // Mapear cada ejercicio con su progreso
+                        Set<EjercicioEntrenamientoConProgresoDto> ejerciciosDto = ejercicios.stream()
+                                        .map(ee -> {
+                                                ProgresoEjercicio progreso = Optional
+                                                                .ofNullable(progresoRutina.getProgresoEjercicio())
+                                                                .orElse(Collections.emptySet())
+                                                                .stream()
+                                                                .filter(p -> p.getEjercicio() != null &&
+                                                                                p.getEjercicio().getId().equals(ee
+                                                                                                .getEjercicio()
+                                                                                                .getId()))
+                                                                .findFirst()
+                                                                .orElse(null);
+
+                                                return EjercicioEntrenamientoConProgresoDto.builder()
+                                                                .id(ee.getId())
+                                                                .ejercicio(ee.getEjercicio())
+                                                                .series(ee.getSeries())
+                                                                .repeticiones(ee.getRepeticiones())
+                                                                .peso(ee.getPeso())
+                                                                .progreso(progreso)
+                                                                .build();
+                                        })
+                                        .collect(Collectors.toSet());
+
+                        EntrenamientoConProgresoDto entrenamientoDto = EntrenamientoConProgresoDto.builder()
+                                        .id(entrenamiento.getId())
+                                        .nombre(entrenamiento.getNombre())
+                                        .deleted(entrenamiento.getDeleted())
+                                        .categoria(entrenamiento.getCategoria())
+                                        .ejercicios(ejerciciosDto)
+                                        .build();
+
+                        // Construir DTO final para esta rutina
+                        return RutinaConProgresoDto.builder()
+                                        .id(progresoRutina.getId())
+                                        .rutina(progresoRutina.getRutina())
+                                        .entrenamientoSeleccionado(entrenamientoDto)
+                                        .fecha(progresoRutina.getFecha())
+                                        .checkIn(progresoRutina.getCheckIn())
+                                        .checkOut(progresoRutina.getCheckOut())
+                                        .build();
+
+                }).collect(Collectors.toSet());
+        }
+
 }
