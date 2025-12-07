@@ -14,6 +14,9 @@ import com.sanger.gymsan.dto.progresoEjercicio.EjercicioEntrenamientoConProgreso
 import com.sanger.gymsan.dto.progresoEjercicio.EntrenamientoConProgresoDto;
 import com.sanger.gymsan.dto.progresoEjercicio.RutinaConProgresoDto;
 import com.sanger.gymsan.dto.progresoRutina.CreateProgresoRutinaDto;
+import com.sanger.gymsan.dto.progresos.EntrenamientoProgresoDto;
+import com.sanger.gymsan.dto.progresos.ProgresoDto;
+import com.sanger.gymsan.dto.progresos.ProgresoEjercicioDto;
 import com.sanger.gymsan.exceptions.MembresiaNoVigenteException;
 import com.sanger.gymsan.exceptions.MembresiaNotEncontradaException;
 import com.sanger.gymsan.exceptions.UltimoCheckInNoRegistradoException;
@@ -270,7 +273,7 @@ public class ProgresoRutinaService extends BaseService<ProgresoRutina, Long, Pro
                 return this.repository.countByCheckOutIsNull();
         }
 
-        public Set<RutinaConProgresoDto> getAllRutinasProgresosByRutinaIdForCurrentUser(Long rutinaId, Usuario user) {
+        public Set<Object> getAllRutinasProgresosByRutinaIdForCurrentUser(Long rutinaId, Usuario user) {
 
                 // Obtener todas las rutinas del usuario con checkOut no nulo
                 Set<ProgresoRutina> progresosRutinas = repository
@@ -285,7 +288,7 @@ public class ProgresoRutinaService extends BaseService<ProgresoRutina, Long, Pro
 
                         // Si no tiene entrenamiento
                         if (progresoRutina.getEntrenamiento() == null) {
-                                return RutinaConProgresoDto.builder()
+                                return ProgresoDto.builder()
                                                 .id(progresoRutina.getId())
                                                 .fecha(progresoRutina.getFecha())
                                                 .checkIn(progresoRutina.getCheckIn())
@@ -303,7 +306,7 @@ public class ProgresoRutinaService extends BaseService<ProgresoRutina, Long, Pro
                                         .orElse(Collections.emptySet());
 
                         // Mapear cada ejercicio con su progreso
-                        Set<EjercicioEntrenamientoConProgresoDto> ejerciciosDto = ejercicios.stream()
+                        Set<ProgresoEjercicioDto> ejerciciosDto = ejercicios.stream()
                                         .map(ee -> {
                                                 ProgresoEjercicio progreso = Optional
                                                                 .ofNullable(progresoRutina.getProgresoEjercicio())
@@ -316,9 +319,10 @@ public class ProgresoRutinaService extends BaseService<ProgresoRutina, Long, Pro
                                                                 .findFirst()
                                                                 .orElse(null);
 
-                                                return EjercicioEntrenamientoConProgresoDto.builder()
+                                                return ProgresoEjercicioDto.builder()
                                                                 .id(ee.getId())
-                                                                .ejercicio(ee.getEjercicio())
+                                                                .ejercicioId(ee.getEjercicio().getId())
+                                                                .nombreEjercicio(ee.getEjercicio().getNombre())
                                                                 .series(ee.getSeries())
                                                                 .repeticiones(ee.getRepeticiones())
                                                                 .peso(ee.getPeso())
@@ -327,19 +331,19 @@ public class ProgresoRutinaService extends BaseService<ProgresoRutina, Long, Pro
                                         })
                                         .collect(Collectors.toSet());
 
-                        EntrenamientoConProgresoDto entrenamientoDto = EntrenamientoConProgresoDto.builder()
+                        EntrenamientoProgresoDto entrenamientoDto = EntrenamientoProgresoDto.builder()
                                         .id(entrenamiento.getId())
                                         .nombre(entrenamiento.getNombre())
-                                        .deleted(entrenamiento.getDeleted())
-                                        .categoria(entrenamiento.getCategoria())
-                                        .ejercicios(ejerciciosDto)
+                                        .descripcion(entrenamiento.getDescripcion())
+                                        .progresosEjercicios(ejerciciosDto)
                                         .build();
 
                         // Construir DTO final para esta rutina
-                        return RutinaConProgresoDto.builder()
+                        return ProgresoDto.builder()
                                         .id(progresoRutina.getId())
-                                        .rutina(progresoRutina.getRutina())
-                                        .entrenamientoSeleccionado(entrenamientoDto)
+                                        .rutinaId(progresoRutina.getRutina().getId())
+                                        .nombreRutina(progresoRutina.getRutina().getNombre())
+                                        .progresoEntrenamiento(entrenamientoDto)
                                         .fecha(progresoRutina.getFecha())
                                         .checkIn(progresoRutina.getCheckIn())
                                         .checkOut(progresoRutina.getCheckOut())
