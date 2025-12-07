@@ -277,7 +277,7 @@ public class ProgresoRutinaService extends BaseService<ProgresoRutina, Long, Pro
 
                 // Obtener todas las rutinas del usuario con checkOut no nulo
                 Set<ProgresoRutina> progresosRutinas = repository
-                                .findByUsuarioIdAndCheckOutIsNotNullOrderByCheckInDesc(user.getId());
+                                .findByUsuarioIdAndRutinaIdOrderByCheckInDesc(user.getId(), rutinaId);
 
                 if (progresosRutinas.isEmpty()) {
                         return Collections.emptySet();
