@@ -1,6 +1,9 @@
 package com.sanger.gymsan.dto.progresos;
 
+import java.util.Set;
+
 import com.sanger.gymsan.models.ProgresoEjercicio;
+import com.sanger.gymsan.models.Serie;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,5 +25,5 @@ public class ProgresoEjercicioDto {
     private Integer repeticiones;
     private Double peso;
 
-    private ProgresoEjercicio progreso;
+    private Set<Serie> seriesRealizadas;
 }

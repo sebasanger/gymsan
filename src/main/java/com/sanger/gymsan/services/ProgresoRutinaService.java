@@ -304,8 +304,6 @@ public class ProgresoRutinaService extends BaseService<ProgresoRutina, Long, Pro
                         Set<EjercicioEntrenamiento> ejercicios = Optional
                                         .ofNullable(entrenamiento.getEjerciciosEntrenamientos())
                                         .orElse(Collections.emptySet());
-
-                        // Mapear cada ejercicio con su progreso
                         Set<ProgresoEjercicioDto> ejerciciosDto = ejercicios.stream()
                                         .map(ee -> {
                                                 ProgresoEjercicio progreso = Optional
@@ -326,7 +324,11 @@ public class ProgresoRutinaService extends BaseService<ProgresoRutina, Long, Pro
                                                                 .series(ee.getSeries())
                                                                 .repeticiones(ee.getRepeticiones())
                                                                 .peso(ee.getPeso())
-                                                                .progreso(progreso)
+                                                                .seriesRealizadas(
+                                                                                Optional.ofNullable(progreso)
+                                                                                                .map(ProgresoEjercicio::getSeries)
+                                                                                                .orElse(Collections
+                                                                                                                .emptySet()))
                                                                 .build();
                                         })
                                         .collect(Collectors.toSet());
