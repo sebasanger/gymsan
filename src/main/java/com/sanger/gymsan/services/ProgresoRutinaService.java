@@ -295,12 +295,16 @@ public class ProgresoRutinaService extends BaseService<ProgresoRutina, Long, Pro
                                                                                 }).collect(Collectors.toSet());
 
                                                                 return ProgresoEjercicioDto.builder()
+                                                                                .nombreEjercicio(ejercicio
+                                                                                                .getEjercicio()
+                                                                                                .getNombre())
                                                                                 .progresos(progresos)
                                                                                 .build();
 
                                                         }).collect(Collectors.toSet());
 
                                         return ProgresoEntrenamientoDto.builder()
+                                                        .nombreEntrenamiento(entrenamiento.getNombre())
                                                         .progresosEjercicios(progresosEjercicio)
                                                         .build();
                                 }).collect(Collectors.toSet());

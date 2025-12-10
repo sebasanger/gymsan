@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ProgresoEntrenamientoDto {
 
+    private String nombreEntrenamiento;
     private Set<ProgresoEjercicioDto> progresosEjercicios;
 
 }
