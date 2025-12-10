@@ -1,6 +1,7 @@
 package com.sanger.gymsan.repository;
 
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -10,4 +11,6 @@ public interface ProgresoEjercicioRepository extends JpaRepository<ProgresoEjerc
     boolean existsByProgresoRutinaIdAndEjercicioId(Long progresoRutinaId, Long ejercicioId);
 
     Optional<ProgresoEjercicio> findByProgresoRutinaIdAndEjercicioId(Long progresoRutinaId, Long ejercicioId);
+
+    Set<ProgresoEjercicio> findByProgresoRutinaId(Long progresoRutinaId);
 }

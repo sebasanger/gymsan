@@ -2,7 +2,6 @@ package com.sanger.gymsan.dto.progresoEjercicio;
 
 import java.util.Set;
 
-import com.sanger.gymsan.dto.progresos.ProgresoEjercicioDto;
 import com.sanger.gymsan.models.Categoria;
 
 import lombok.AllArgsConstructor;

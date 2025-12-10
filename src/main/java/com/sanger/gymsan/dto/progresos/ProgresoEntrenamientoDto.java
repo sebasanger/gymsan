@@ -2,8 +2,6 @@ package com.sanger.gymsan.dto.progresos;
 
 import java.util.Set;
 
-import com.sanger.gymsan.models.Serie;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,8 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProgresoDto {
+public class ProgresoEntrenamientoDto {
 
-    private Set<Serie> seriesRealizadas;
+    private Set<ProgresoEjercicioDto> progresosEjercicios;
 
 }

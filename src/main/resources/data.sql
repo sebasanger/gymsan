@@ -151,12 +151,15 @@ insert into pagos (id, fecha, monto, transaction, aceptada, descripcion, membres
 -- POGRESOS RUTINAS --
 insert into progresos_rutinas (id, usuarios_id, rutinas_id, entrenamientos_id, check_in, check_out, fecha) values (1, 1, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIME);
 
-insert into progresos_rutinas (id, usuarios_id, rutinas_id, entrenamientos_id, check_in, check_out, fecha) values (2, 1, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIME );
+insert into progresos_rutinas (id, usuarios_id, rutinas_id, entrenamientos_id, check_in, check_out, fecha) values (2, 1, 1, 2, DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 1 DAY), DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 1 DAY), DATE_SUB(CURRENT_TIME, INTERVAL 1 DAY) );
+
+
+insert into progresos_rutinas (id, usuarios_id, rutinas_id, entrenamientos_id, check_in, check_out, fecha) values (3, 1, 1, 1, DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 2 DAY), DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 2 DAY), DATE_SUB(CURRENT_TIME, INTERVAL 2 DAY) );
 -- POGRESOS RUTINAS --
 
 
 -- POGRESOS EJERCICIOS --
-insert into progresos_ejercicios (id, progresos_rutinas_id, ejercicios_id, cantidad_series) values (1, 1, 1, 4), (2, 1, 2, 4), (3, 2, 2, 4);
+insert into progresos_ejercicios (id, progresos_rutinas_id, ejercicios_id, cantidad_series) values (1, 1, 1, 4), (2, 2, 2, 4), (3, 3, 4, 4);
 -- POGRESOS EJERCICIOS --
 
 
@@ -166,6 +169,8 @@ insert into series (id, repeticiones, peso) values (1, 10, 140), (2, 9, 140), (3
 insert into series (id, repeticiones, peso) values (5, 8, 100), (6, 9, 100), (7, 7, 100), (8, 8, 100);
 
 insert into series (id, repeticiones, peso) values (9, 8, 100), (10, 9, 100), (11, 7, 100), (12, 8, 100);
+
+insert into series (id, repeticiones, peso) values (13, 8, 100), (14, 9, 100), (15, 7, 100), (16, 8, 100);
 -- SERIES --
 
 
@@ -174,7 +179,7 @@ insert into series_progresos_rutinas (series_id, progresos_ejercicios_id) values
 
 insert into series_progresos_rutinas (series_id, progresos_ejercicios_id) values (5, 2), (6, 2), (7, 2), (8, 2);
 
-insert into series_progresos_rutinas (series_id, progresos_ejercicios_id) values (9, 3), (10, 3), (11, 3), (12, 3);
+insert into series_progresos_rutinas (series_id, progresos_ejercicios_id) values (6, 3), (7, 3), (8, 3), (9, 3);
 -- SERIES PROGRESOS EJERCICIOS --
 
 
@@ -214,25 +219,4 @@ insert into ejercicios_alternativos (ejercicio_entrenamiento_id, alternativo_id)
 (8, 4),
 (9, 7);
 
--- PROGRESOS RUTINAS NUEVOS --
-insert into progresos_rutinas (id, usuarios_id, rutinas_id, entrenamientos_id, check_in, check_out, fecha) values
-(3, 1, 3, 4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIME),
-(4, 1, 4, 5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIME);
 
--- PROGRESOS EJERCICIOS NUEVOS --
-insert into progresos_ejercicios (id, progresos_rutinas_id, ejercicios_id, cantidad_series) values
-(4, 3, 12, 3),
-(5, 3, 13, 4),
-(6, 4, 14, 4);
-
--- SERIES NUEVAS --
-insert into series (id, repeticiones, peso) values
-(13, 10, 50), (14, 12, 50), (15, 8, 50),
-(16, 12, 20), (17, 12, 20), (18, 12, 20), (19, 12, 20),
-(20, 8, 40), (21, 8, 40), (22, 8, 40), (23, 8, 40);
-
--- SERIES PROGRESOS EJERCICIOS NUEVAS --
-insert into series_progresos_rutinas (series_id, progresos_ejercicios_id) values
-(13, 4), (14, 4), (15, 4),
-(16, 5), (17, 5), (18, 5), (19, 5),
-(20, 6), (21, 6), (22, 6), (23, 6);

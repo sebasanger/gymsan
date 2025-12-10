@@ -11,13 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class EntrenamientoProgresoDto {
+public class ProgresoRutinaDto {
 
-    private Long id;
+    private Long rutinaId;
+    private Set<ProgresoEntrenamientoDto> progresosEntrenamientos;
 
-    private String nombre;
-
-    private String descripcion;
-
-    private Set<ProgresoEjercicioDto> progresosEjercicios;
 }
