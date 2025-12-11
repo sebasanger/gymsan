@@ -282,22 +282,40 @@ public class ProgresoRutinaService extends BaseService<ProgresoRutina, Long, Pro
                 Set<ProgresoEntrenamientoDto> progresosEntrenamientos = rutina.getEntrenamientos().stream()
                                 .map(entrenamiento -> {
 
-                                        Set<ProgresoEjercicioDto> progresosEjercicio = entrenamiento
-                                                        .getEjerciciosEntrenamientos().stream().map(ejercicio -> {
+                                        Set<ProgresoEjercicioDto> progresosEjercicio = this.repository
+                                                        .findByUsuarioIdAndRutinaIdAndEntrenamientoIdAndProgresoEjercicioIsNotNullOrderByCheckInDesc(
+                                                                        user.getId(), rutinaId, entrenamiento.getId())
+                                                        .stream()
+                                                        .map(progresoRutina -> {
+                                                                Set<ProgresoDto> progresos = progresoRutina
+                                                                                .getProgresoEjercicio().stream()
+                                                                                .map(progresoEjercicio -> {
 
-                                                                Set<ProgresoDto> progresos = entrenamiento
-                                                                                .getEjerciciosEntrenamientos().stream()
-                                                                                .map(progreso -> {
                                                                                         return ProgresoDto
                                                                                                         .builder()
+                                                                                                        .fecha(progresoEjercicio
+                                                                                                                        .getProgresoRutina()
+                                                                                                                        .getFecha())
+                                                                                                        .nombreEjercicio(
+                                                                                                                        progresoEjercicio
+                                                                                                                                        .getEjercicio()
+                                                                                                                                        .getNombre())
+                                                                                                        .seriesRealizadas(
+                                                                                                                        progresoEjercicio
+                                                                                                                                        .getSeries())
                                                                                                         .build();
 
                                                                                 }).collect(Collectors.toSet());
 
-                                                                return ProgresoEjercicioDto.builder()
-                                                                                .nombreEjercicio(ejercicio
-                                                                                                .getEjercicio()
+                                                                String nombreEjercicio = progresoRutina
+                                                                                .getProgresoEjercicio().stream()
+                                                                                .findFirst()
+                                                                                .map(pe -> pe.getEjercicio()
                                                                                                 .getNombre())
+                                                                                .orElse("");
+
+                                                                return ProgresoEjercicioDto.builder()
+                                                                                .nombreEjercicio(nombreEjercicio)
                                                                                 .progresos(progresos)
                                                                                 .build();
 

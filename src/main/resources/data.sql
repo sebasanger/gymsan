@@ -159,7 +159,7 @@ insert into progresos_rutinas (id, usuarios_id, rutinas_id, entrenamientos_id, c
 
 
 -- POGRESOS EJERCICIOS --
-insert into progresos_ejercicios (id, progresos_rutinas_id, ejercicios_id, cantidad_series) values (1, 1, 1, 4), (2, 2, 2, 4), (3, 3, 4, 4);
+insert into progresos_ejercicios (id, progresos_rutinas_id, ejercicios_id, cantidad_series) values (1, 1, 1, 4), (2, 2, 2, 4), (3, 3, 1, 4);
 -- POGRESOS EJERCICIOS --
 
 

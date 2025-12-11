@@ -21,6 +21,9 @@ public interface ProgresoRutinaRepository extends JpaRepository<ProgresoRutina, 
 
     Set<ProgresoRutina> findByUsuarioIdAndRutinaIdOrderByCheckInDesc(Long usuarioId, Long rutinaId);
 
+    Set<ProgresoRutina> findByUsuarioIdAndRutinaIdAndEntrenamientoIdAndProgresoEjercicioIsNotNullOrderByCheckInDesc(
+            Long usuarioId, Long rutinaId, Long entrenamientoId);
+
     long countByCheckOutIsNull();
 
 }
