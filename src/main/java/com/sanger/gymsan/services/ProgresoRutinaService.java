@@ -296,10 +296,6 @@ public class ProgresoRutinaService extends BaseService<ProgresoRutina, Long, Pro
                                                                                                         .fecha(progresoEjercicio
                                                                                                                         .getProgresoRutina()
                                                                                                                         .getFecha())
-                                                                                                        .nombreEjercicio(
-                                                                                                                        progresoEjercicio
-                                                                                                                                        .getEjercicio()
-                                                                                                                                        .getNombre())
                                                                                                         .seriesRealizadas(
                                                                                                                         progresoEjercicio
                                                                                                                                         .getSeries())
@@ -314,7 +310,15 @@ public class ProgresoRutinaService extends BaseService<ProgresoRutina, Long, Pro
                                                                                                 .getNombre())
                                                                                 .orElse("");
 
+                                                                Long idEjercicio = progresoRutina
+                                                                                .getProgresoEjercicio().stream()
+                                                                                .findFirst()
+                                                                                .map(pe -> pe.getEjercicio()
+                                                                                                .getId())
+                                                                                .orElse(0L);
+
                                                                 return ProgresoEjercicioDto.builder()
+                                                                                .idEjercicio(idEjercicio)
                                                                                 .nombreEjercicio(nombreEjercicio)
                                                                                 .progresos(progresos)
                                                                                 .build();
@@ -322,6 +326,7 @@ public class ProgresoRutinaService extends BaseService<ProgresoRutina, Long, Pro
                                                         }).collect(Collectors.toSet());
 
                                         return ProgresoEntrenamientoDto.builder()
+                                                        .idEntrenamiento(entrenamiento.getId())
                                                         .nombreEntrenamiento(entrenamiento.getNombre())
                                                         .progresosEjercicios(progresosEjercicio)
                                                         .build();
@@ -329,6 +334,7 @@ public class ProgresoRutinaService extends BaseService<ProgresoRutina, Long, Pro
 
                 return ProgresoRutinaDto.builder()
                                 .rutinaId(rutina.getId())
+                                .nombreRutina(rutina.getNombre())
                                 .progresosEntrenamientos(progresosEntrenamientos)
                                 .build();
 

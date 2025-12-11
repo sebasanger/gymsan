@@ -3,7 +3,6 @@ package com.sanger.gymsan.dto.progresos;
 import java.time.LocalDate;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sanger.gymsan.models.Serie;
 
 import lombok.AllArgsConstructor;
@@ -19,8 +18,5 @@ public class ProgresoDto {
 
     private LocalDate fecha;
     private Set<Serie> seriesRealizadas;
-
-    @JsonIgnore
-    private String nombreEjercicio;
 
 }

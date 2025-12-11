@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class ProgresoRutinaDto {
 
     private Long rutinaId;
+    private String nombreRutina;
     private Set<ProgresoEntrenamientoDto> progresosEntrenamientos;
 
 }

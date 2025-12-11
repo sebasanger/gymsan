@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class ProgresoEntrenamientoDto {
-
+    private Long idEntrenamiento;
     private String nombreEntrenamiento;
     private Set<ProgresoEjercicioDto> progresosEjercicios;
 
