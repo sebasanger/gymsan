@@ -89,7 +89,10 @@ public class ProgresoRutinaService extends BaseService<ProgresoRutina, Long, Pro
                                 .findByUsuarioIdAndEnabledTrue(usuario.getId())
                                 .orElseThrow(() -> new MembresiaNotEncontradaException());
 
-                if (membresiaActual.getFechaVencimiento().isBefore(LocalDateTime.now())) {
+                LocalDateTime fechaVencimiento = Optional.ofNullable(membresiaActual.getFechaVencimiento())
+                                .orElseThrow(() -> new MembresiaNoVigenteException());
+
+                if (fechaVencimiento.isBefore(LocalDateTime.now())) {
                         throw new MembresiaNoVigenteException();
                 }
 
